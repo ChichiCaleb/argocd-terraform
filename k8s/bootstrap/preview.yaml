@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: preview-apps
+  namespace: argocd
+  annotations:
+     argocd-image-updater.argoproj.io/image-list: horizonclient/nginx-personal:v*.*.*-alpha.*
+     argocd-image-updater.argoproj.io/write-back-method: git
+  finalizers:
+   - resources-finalizer.argocd.argoproj.io
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  generators:
+  - pullRequest:
+          github:
+            owner: ChichiCaleb
+            repo: gitops
+            
+            labels:
+            - preview
+          requeueAfterSeconds: 15
+  template:      
+    metadata:
+      name: 'webapp-{{branch}}-{{number}}'
+      namespace: argocd
+    spec:
+      source:
+        repoURL: '{{metadata.annotations.workload_repo_url}}'
+        targetRevision: '{{metadata.annotations.workload_repo_revision}}'
+        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/environments/staging/web'
+      
+      project: default
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true  
+        automated:
+          prune: true
+          selfHeal: true
+      destination:
+        server:  https://kubernetes.default.svc
+        namespace: 'webapp-{{branch}}-{{number}}'
+
+
+
+
+
+
+

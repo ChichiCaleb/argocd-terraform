@@ -1,0 +1,10 @@
+---
+namespace: staging
+replicas:
+  - name: app-deployment
+    count: 1
+images:
+  - name:  horizonclient/nginx-personal
+    newTag: v0.1.0
+resources:
+  - ../../../web-base
