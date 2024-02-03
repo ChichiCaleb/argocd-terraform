@@ -1,7 +1,4 @@
-# variable "argocd_admin_password" {
-#   type        = string
-#   description = "The password to use for the `admin` Argo CD user."
-# }
+
 variable "domain_name" {
   description = "Route 53 domain name"
   type        = string
