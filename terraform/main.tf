@@ -82,13 +82,11 @@ locals {
   )
 
   
-
-
-   argocd_apps = {
+argocd_apps = {
     addons        = file("../k8s/bootstrap/addons.yaml")
-    preview_stage = file("../k8s/bootstrap/preview-staging.yaml")
-    workloads_stage = file("../k8s/bootstrap/workloads-staging.yaml")
-    workloads_prod  = file("../k8s/bootstrap/workloads-prod.yaml")
+    previewstage = file("../k8s/bootstrap/preview-staging.yaml")
+    workloadsstage = file("../k8s/bootstrap/workloads-staging.yaml")
+    workloadsprod  = file("../k8s/bootstrap/workloads-prod.yaml")
   }
    
  
