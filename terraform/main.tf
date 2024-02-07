@@ -15,26 +15,16 @@ module "eks_blueprints_addons" {
 
  
   # EKS Blueprints Addons
-    enable_argocd                                = var.addons.enable_argocd 
-    enable_argo_events                           = var.addons.enable_argo_events 
-    enable_argo_rollouts                         = var.addons.enable_argo_rollouts 
-    enable_argo_workflows                        = var.addons.enable_argo_workflows 
-    enable_cert_manager                          = var.addons.enable_cert_manager 
-    enable_aws_cloudwatch_metrics                = var.addons.enable_aws_cloudwatch_metrics 
-    enable_cluster_autoscaler                    = var.addons.enable_cluster_autoscaler 
-    enable_aws_efs_csi_driver                    = var.addons. enable_aws_efs_csi_driver 
-    enable_external_dns                          = var.addons.enable_external_dns 
-    enable_external_secrets                      = var.addons.enable_external_secrets 
-    enable_aws_for_fluentbit                     = var.addons.enable_aws_for_fluentbit 
-    enable_aws_gateway_api_controller            = var.addons.enable_aws_gateway_api_controller   
-    enable_ingress_nginx                         = var.addons.enable_ingress_nginx 
-    enable_kube_prometheus_stack                 = var.addons.enable_kube_prometheus_stack 
-    enable_aws_load_balancer_controller          = var.addons.enable_aws_load_balancer_controller 
-    enable_metrics_server                        = var.addons.enable_metrics_server 
-    enable_aws_node_termination_handler          = var.addons.enable_aws_node_termination_handler 
-    enable_secrets_store_csi_driver              = var.addons.enable_secrets_store_csi_driver 
-    enable_secrets_store_csi_driver_provider_aws = var.addons.enable_aws_secrets_store_csi_driver_provider 
-    enable_vpa                                   = var.addons.enable_vpa 
+  enable_cert_manager                 = var.addons.enable_cert_manager
+  enable_aws_efs_csi_driver           = var.addons.enable_aws_efs_csi_driver
+  enable_aws_cloudwatch_metrics       = var.addons.enable_aws_cloudwatch_metrics
+  enable_cluster_autoscaler           = var.addons.enable_cluster_autoscaler
+  enable_external_dns                 = var.addons.enable_external_dns
+  enable_external_secrets             = var.addons.enable_external_secrets
+  enable_aws_load_balancer_controller = var.addons.enable_aws_load_balancer_controller
+  enable_aws_for_fluentbit            = var.addons.enable_aws_for_fluentbit
+  enable_aws_node_termination_handler = var.addons.enable_aws_node_termination_handler
+  enable_aws_gateway_api_controller   = var.addons.enable_aws_gateway_api_controller
   
   external_dns_route53_zone_arns = [local.route53_zone_arn]
 

@@ -65,12 +65,12 @@ variable "addons" {
     enable_external_dns                          = true
     enable_external_secrets                      = true
     enable_aws_for_fluentbit                     = true
-    enable_aws_gateway_api_controller            = true
+    enable_aws_gateway_api_controller            = false
     enable_ingress_nginx                         = true # inginx configured with AWS NLB
     enable_kube_prometheus_stack                 = true
     enable_aws_load_balancer_controller          = true
     enable_metrics_server                        = true
-    enable_aws_node_termination_handler          = true
+    enable_aws_node_termination_handler          = false
     enable_prometheus_adapter                    = true
     enable_secrets_store_csi_driver              = true
     enable_aws_secrets_store_csi_driver_provider = true
