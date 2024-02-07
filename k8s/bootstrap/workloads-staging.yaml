@@ -8,26 +8,28 @@ metadata:
      argocd-image-updater.argoproj.io/write-back-method: git
   finalizers:
    - resources-finalizer.argocd.argoproj.io
+
 spec:
   syncPolicy:
     preserveResourcesOnDeletion: false
   generators:
-    - merge:
-        mergeKeys: [server]
+   
+    - matrix:
         generators:
+         
+          - git:
+              repoURL: '{{metadata.annotations.workload_repo_url}}'
+              revision: HEAD
+              directories:
+                - path:'{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/*'
+        
           - clusters:
               selector:
                 matchLabels:
                   environment: staging
-
-          - git:
-              repoURL: '{{metadata.annotations.workload_repo_url}}'
-              revision: '{{metadata.annotations.workload_repo_revision}}'
-              directories:
-              - path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/*'
   template:
     metadata:
-      name: 'workload-{{metadata.labels.environment}}-{{path.basename}}'
+      name: '{{path.basename}}-{{name}}-{{metadata.labels.environment}}'
       labels:
         workload: 'true'
     spec:
@@ -36,9 +38,10 @@ spec:
         repoURL: '{{metadata.annotations.workload_repo_url}}'
         path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/{{path.basename}}/environments/staging'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
+   
       destination:
-        namespace: 'workload-{{path.basename}}'
-        name: '{{name}}'
+        server: '{{server}}'
+        namespace: '{{path.basename}}'
       syncPolicy:
         automated: {}
         syncOptions:

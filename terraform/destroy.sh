@@ -25,27 +25,28 @@ terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
 # check if TMPFILE contains the string "No outputs found"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
  source "$TMPFILE"
- if [$env == 'staging']
- kubectl delete -n argocd applicationset workloads-staging
- fi
- if [$env == 'prod']
- kubectl delete -n argocd applicationset workloads-prod
- fi
+
  
+kubectl patch -n argocd applicationset/preview-apps \
+   --type json \
+   --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+
+kubectl patch -n argocd applicationset/workloads-staging \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+
+  
+kubectl patch -n argocd applicationset/workloads-prod \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+
   kubectl delete -n argocd applicationset cluster-addons
   kubectl delete -n argocd applicationset addons-aws-ingress-nginx
   kubectl delete svc -n ingress-nginx ingress-nginx-controller
   kubectl delete -n argocd applicationset addons-argocd
   kubectl delete -n argocd svc argo-cd-argocd-server
   kubectl delete ing -n argocd argo-cd-argocd-server
-  # Stop any existing kubectl processes if needed
-  killall kubectl
- # Start kubectl proxy in the background
-  kubectl proxy &
-  # Retrieve the namespace argocd in JSON format, remove finalizers, and finalize the namespace
-  kubectl get ns argocd -o json | \
-  jq '.spec.finalizers=[]' | \
-  curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-r
+  
 fi
 
 terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.argocd" -auto-approve

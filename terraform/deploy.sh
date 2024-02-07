@@ -14,4 +14,4 @@ set -x
 terraform workspace new $env
 terraform workspace select $env
 terraform init
-terraform apply -var-file="workspaces/${env}.tfvars"
+terraform apply -auto-approve -var-file="workspaces/${env}.tfvars" -auto-approve
