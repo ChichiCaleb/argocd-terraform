@@ -19,9 +19,7 @@ spec:
                 addonChartRepository: https://kubernetes-sigs.github.io/external-dns
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                
                   - key: enable_external_dns
                     operator: In
                     values: ['true']

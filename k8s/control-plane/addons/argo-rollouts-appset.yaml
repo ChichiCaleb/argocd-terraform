@@ -18,9 +18,7 @@ spec:
                 addonChartRepository: https://argoproj.github.io/argo-helm
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                 
                   - key: enable_argo_rollouts
                     operator: In
                     values: ['true']

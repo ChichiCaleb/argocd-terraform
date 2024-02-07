@@ -56,11 +56,11 @@ provider "argocd" {
 data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {}
 locals {
-  name   ="${var.business_divsion}-${var.environment}-eks" 
+  name   = "multi-cluster-${terraform.workspace}" 
   region = var.region
   tags = {
     Blueprint  = local.name
-    GithubRepo = "github.com/ChichiCaleb/gitops"
+    GithubRepo = "github.com/ChichiCaleb/argocd-terraform"
   }
 }
 provider "aws" {

@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: preview-apps
+  namespace: argocd
+  annotations:
+     argocd-image-updater.argoproj.io/image-list: horizonclient/nginx-personal:~v0.1.0-alpha.0
+     argocd-image-updater.argoproj.io/write-back-method: git
+  finalizers:
+   - resources-finalizer.argocd.argoproj.io
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  
+  generators:
+    - merge:
+        mergeKeys: [server]
+        generators:
+          - pullRequest:
+              github:
+                owner: ChichiCaleb
+                repo: argocd-terraform
+                labels:
+                - preview
+              requeueAfterSeconds: 60
+
+          - git:
+              repoURL: '{{metadata.annotations.workload_repo_url}}'
+              revision: '{{metadata.annotations.workload_repo_revision}}'
+              directories:
+              - path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/*'      
+  template:      
+    metadata:
+      name: 'workload-{{branch}}-{{number}}-{{path.basename}}'
+      namespace: argocd
+    spec:
+      source:
+        repoURL: '{{metadata.annotations.workload_repo_url}}'
+        targetRevision: '{{metadata.annotations.workload_repo_revision}}'
+        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/{{path.basename}}/environments/staging'
+      
+      project: default
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true  
+        automated:
+          prune: true
+          selfHeal: true
+      destination:
+        server:  https://kubernetes.default.svc
+        namespace: 'workload-{{branch}}-{{number}}-{{path.basename}}'
+
+
+
+
+
+
+

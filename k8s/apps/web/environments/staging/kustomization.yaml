@@ -7,4 +7,4 @@ images:
   - name:  horizonclient/nginx-personal
     newTag: v0.1.0
 resources:
-  - ../../../web-base
+  - ../../web-base

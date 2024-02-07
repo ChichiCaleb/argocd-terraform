@@ -18,9 +18,7 @@ spec:
                 addonChartRepository: https://charts.fairwinds.com/stable
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                 
                   - key: enable_vpa
                     operator: In
                     values: ['true']

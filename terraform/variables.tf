@@ -45,37 +45,35 @@ variable "addons" {
   description = "Kubernetes addons"
   type        = any
   default = {
-    # Enable if want argo manage argo from gitops
-    enable_argocd                                = false
-    
     enable_ack_apigatewayv2                      = false
     enable_ack_dynamodb                          = false
     enable_ack_eventbridge                       = false
     enable_ack_prometheusservice                 = false
     enable_ack_rds                               = false
     enable_ack_s3                                = false
-    
-    enable_aws_argocd_ingress                    = true
+    enable_argocd                                = true
     enable_argo_events                           = false
     enable_argo_rollouts                         = false
     enable_argo_workflows                        = false
+    enable_argocd_image_updater                  = true
+    enable_aws_argocd_ingress                    = true
     enable_cert_manager                          = true
     enable_aws_cloudwatch_metrics                = true
-    enable_cluster_autoscaler                    = false
+    enable_cluster_autoscaler                    = true
     enable_aws_ebs_csi_resources                 = true # generate gp2 and gp3 storage classes for ebs-csi
     enable_aws_efs_csi_driver                    = false
     enable_external_dns                          = true
     enable_external_secrets                      = true
     enable_aws_for_fluentbit                     = true
-    enable_aws_gateway_api_controller            = false
-    enable_aws_ingress_nginx                     = true # inginx configured with AWS NLB
-    enable_kube_prometheus_stack                 = false
+    enable_aws_gateway_api_controller            = true
+    enable_ingress_nginx                         = true # inginx configured with AWS NLB
+    enable_kube_prometheus_stack                 = true
     enable_aws_load_balancer_controller          = true
     enable_metrics_server                        = true
-    enable_aws_node_termination_handler          = false
-
-    enable_secrets_store_csi_driver              = false
-    enable_aws_secrets_store_csi_driver_provider = false
+    enable_aws_node_termination_handler          = true
+    enable_prometheus_adapter                    = true
+    enable_secrets_store_csi_driver              = true
+    enable_aws_secrets_store_csi_driver_provider = true
     enable_vpa                                   = false
     
     }

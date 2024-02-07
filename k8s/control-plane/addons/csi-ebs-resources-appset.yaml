@@ -12,9 +12,7 @@ spec:
           addonChart: aws-ebs-csi
         selector:
           matchExpressions:
-            - key: akuity.io/argo-cd-cluster-name
-              operator: NotIn
-              values: [in-cluster]
+           
             - key: enable_aws_ebs_csi_resources
               operator: In
               values: ['true']

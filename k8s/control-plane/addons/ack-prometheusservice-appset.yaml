@@ -22,9 +22,7 @@ spec:
                 addonChartRepository: public.ecr.aws
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                  
                   - key: enable_ack_prometheusservice
                     operator: In
                     values: ['true']

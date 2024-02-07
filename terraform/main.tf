@@ -15,16 +15,26 @@ module "eks_blueprints_addons" {
 
  
   # EKS Blueprints Addons
-  enable_cert_manager                 = var.addons.enable_cert_manager
-  enable_aws_efs_csi_driver           = var.addons.enable_aws_efs_csi_driver
-  enable_aws_cloudwatch_metrics       = var.addons.enable_aws_cloudwatch_metrics
-  enable_cluster_autoscaler           = var.addons.enable_cluster_autoscaler
-  enable_external_dns                 = var.addons.enable_external_dns
-  enable_external_secrets             = var.addons.enable_external_secrets
-  enable_aws_load_balancer_controller = var.addons.enable_aws_load_balancer_controller
-  enable_aws_for_fluentbit            = var.addons.enable_aws_for_fluentbit
-  enable_aws_node_termination_handler = var.addons.enable_aws_node_termination_handler
-  enable_aws_gateway_api_controller   = var.addons.enable_aws_gateway_api_controller
+    enable_argocd                                = var.addons.enable_argocd 
+    enable_argo_events                           = var.addons.enable_argo_events 
+    enable_argo_rollouts                         = var.addons.enable_argo_rollouts 
+    enable_argo_workflows                        = var.addons.enable_argo_workflows 
+    enable_cert_manager                          = var.addons.enable_cert_manager 
+    enable_aws_cloudwatch_metrics                = var.addons.enable_aws_cloudwatch_metrics 
+    enable_cluster_autoscaler                    = var.addons.enable_cluster_autoscaler 
+    enable_aws_efs_csi_driver                    = var.addons. enable_aws_efs_csi_driver 
+    enable_external_dns                          = var.addons.enable_external_dns 
+    enable_external_secrets                      = var.addons.enable_external_secrets 
+    enable_aws_for_fluentbit                     = var.addons.enable_aws_for_fluentbit 
+    enable_aws_gateway_api_controller            = var.addons.enable_aws_gateway_api_controller   
+    enable_ingress_nginx                         = var.addons.enable_ingress_nginx 
+    enable_kube_prometheus_stack                 = var.addons.enable_kube_prometheus_stack 
+    enable_aws_load_balancer_controller          = var.addons.enable_aws_load_balancer_controller 
+    enable_metrics_server                        = var.addons.enable_metrics_server 
+    enable_aws_node_termination_handler          = var.addons.enable_aws_node_termination_handler 
+    enable_secrets_store_csi_driver              = var.addons.enable_secrets_store_csi_driver 
+    enable_secrets_store_csi_driver_provider_aws = var.addons.enable_aws_secrets_store_csi_driver_provider 
+    enable_vpa                                   = var.addons.enable_vpa 
   
   external_dns_route53_zone_arns = [local.route53_zone_arn]
 
@@ -40,7 +50,7 @@ locals {
   is_route53_private_zone = false
   domain_name      = var.domain_name
   argocd_subdomain = "argocd"
-  environment      =  var.environment
+  environment      =  terraform.workspace
   argocd_host      = "${local.argocd_subdomain}.${local.domain_name}"
   route53_zone_arn = try(data.aws_route53_zone.this[0].arn, "")
  
@@ -83,40 +93,29 @@ locals {
 
   
 
+
    argocd_apps = {
-    addons    = file("../k8s/bootstrap/addons.yaml")
-    workloads = file("../k8s/bootstrap/workloads.yaml")
+    addons        = file("../k8s/bootstrap/addons.yaml")
+    preview_stage = file("../k8s/bootstrap/preview-staging.yaml")
+    workloads_stage = file("../k8s/bootstrap/workloads-staging.yaml")
+    workloads_prod  = file("../k8s/bootstrap/workloads-prod.yaml")
   }
+   
+ 
 
 
 }
 
- resource "helm_release" "updater" {
-  name = "updater"
-  description = "A Helm chart to install the ArgoCD image updater"
-  namespace        = "argocd"
-  create_namespace = false
-  chart            = "argocd-image-updater"
-  version          = "0.9.1"
-  repository       = "https://argoproj.github.io/argo-helm"
-  values = [
-    <<-EOT
-      metrics:
-          enabled: true
-    EOT
-  ]
-
-  depends_on = [module.eks_blueprints_addons,kubernetes_namespace.argocd, kubernetes_secret.git_secrets]
-      
-  }
+ 
 
 ################################################################################
 # GitOps Bridge: Bootstrap for In-Cluster
 ################################################################################
 module "gitops_bridge_bootstrap" {
-  source = "github.com/gitops-bridge-dev/gitops-bridge-argocd-bootstrap-terraform?ref=v2.0.0"
+  source = "gitops-bridge-dev/gitops-bridge/helm"
  
   cluster = {
+    cluster_name = module.eks.cluster_name
     metadata = local.cluster_metadata
     addons   = local.cluster_labels
     environment  = local.environment

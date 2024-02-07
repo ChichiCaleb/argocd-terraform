@@ -19,9 +19,7 @@ spec:
                 addonChartRepository: https://kubernetes-sigs.github.io/metrics-server
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+               
                   - key: enable_metrics_server
                     operator: In
                     values: ['true']

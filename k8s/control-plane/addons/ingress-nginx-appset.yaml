@@ -19,9 +19,7 @@ spec:
                 addonChartRepository: https://kubernetes.github.io/ingress-nginx
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                
                   - key: enable_aws_ingress_nginx
                     operator: In
                     values: ['true']

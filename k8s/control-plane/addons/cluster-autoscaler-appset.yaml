@@ -18,9 +18,7 @@ spec:
                 addonChartRepository: https://kubernetes.github.io/autoscaler
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                 
                   - key: enable_cluster_autoscaler
                     operator: In
                     values: ['true']

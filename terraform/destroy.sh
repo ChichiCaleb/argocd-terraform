@@ -6,6 +6,16 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
 [[ -n "${DEBUG:-}" ]] && set -x
 
+if [[ $# -eq 0 ]] ; then
+    echo "No arguments supplied"
+    echo "Usage: destroy.sh <environment>"
+    echo "Example: destroy.sh dev"
+    exit 1
+fi
+
+env=$1
+echo "Destroying $env ..."
+terraform workspace select $env
 
 # # Delete the Ingress/SVC before removing the addons and
 # delete argocd finalizer inorder to successfully run terraform destroy"
@@ -15,24 +25,34 @@ terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
 # check if TMPFILE contains the string "No outputs found"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
  source "$TMPFILE"
-  kubectl delete -n argocd applicationset workloads
+ if [$env == 'staging']
+ kubectl delete -n argocd applicationset workloads-staging
+ fi
+ if [$env == 'prod']
+ kubectl delete -n argocd applicationset workloads-prod
+ fi
+ 
   kubectl delete -n argocd applicationset cluster-addons
   kubectl delete -n argocd applicationset addons-aws-ingress-nginx
   kubectl delete svc -n ingress-nginx ingress-nginx-controller
   kubectl delete -n argocd applicationset addons-argocd
   kubectl delete -n argocd svc argo-cd-argocd-server
   kubectl delete ing -n argocd argo-cd-argocd-server
+  # Stop any existing kubectl processes if needed
+  killall kubectl
+ # Start kubectl proxy in the background
   kubectl proxy &
+  # Retrieve the namespace argocd in JSON format, remove finalizers, and finalize the namespace
   kubectl get ns argocd -o json | \
   jq '.spec.finalizers=[]' | \
   curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-r
 fi
 
-terraform destroy -target="module.argocd" -auto-approve
-terraform destroy -target="module.gitops_bridge_bootstrap" -auto-approve
-terraform destroy -target="module.eks_blueprints_addons" -auto-approve
-terraform destroy -target="module.eks" -auto-approve
-terraform destroy -target="module.vpc" -auto-approve
+terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.argocd" -auto-approve
+terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.gitops_bridge_bootstrap" -auto-approve
+terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.eks_blueprints_addons" -auto-approve
+terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.eks" -auto-approve
+terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.vpc" -auto-approve
 terraform destroy -auto-approve
 
 

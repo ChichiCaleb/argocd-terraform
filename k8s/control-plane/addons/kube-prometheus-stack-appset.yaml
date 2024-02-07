@@ -18,9 +18,7 @@ spec:
                 addonChartRepository: https://prometheus-community.github.io/helm-charts
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                 
                   - key: enable_kube_prometheus_stack
                     operator: In
                     values: ['true']

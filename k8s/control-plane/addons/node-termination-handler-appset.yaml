@@ -18,9 +18,7 @@ spec:
                 addonChartRepository: https://aws.github.io/eks-charts
               selector:
                 matchExpressions:
-                  - key: akuity.io/argo-cd-cluster-name
-                    operator: NotIn
-                    values: [in-cluster]
+                 
                   - key: enable_aws_node_termination_handler
                     operator: In
                     values: ['true']

@@ -11,6 +11,7 @@ output "configure_argocd" {
   value       = <<-EOT
     export KUBECONFIG="/tmp/${module.eks.cluster_name}"
     aws eks --region ${local.region} update-kubeconfig --name ${module.eks.cluster_name}
+    export ARGOCD_OPTS="--port-forward --port-forward-namespace argocd --grpc-web"
     kubectl config set-context --current --namespace argocd
     argocd login --port-forward --username admin --password $(aws secretsmanager get-secret-value --secret-id argocd --region ${local.region} --output json | jq -r .SecretString)
 
