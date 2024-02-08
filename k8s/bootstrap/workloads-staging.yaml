@@ -21,7 +21,7 @@ spec:
               repoURL: '{{metadata.annotations.workload_repo_url}}'
               revision: HEAD
               directories:
-                - path:'{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/*'
+                - path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/*'
         
           - clusters:
               selector:
@@ -46,3 +46,6 @@ spec:
         automated: {}
         syncOptions:
           - CreateNamespace=true
+
+
+

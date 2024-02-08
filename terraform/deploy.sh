@@ -11,7 +11,10 @@ echo "Deploying $env with "workspaces/${env}.tfvars" ..."
 
 set -x
 
+TF_REGISTRY_CLIENT_TIMEOUT=1200
+TF_REGISTRY_DISCOVERY_RETRY=20
+
 terraform workspace new $env
 terraform workspace select $env
-terraform init
+terraform init -reconfigure
 terraform apply -auto-approve -var-file="workspaces/${env}.tfvars" -auto-approve

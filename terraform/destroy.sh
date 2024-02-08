@@ -41,10 +41,11 @@ kubectl patch -n argocd applicationset/workloads-prod \
   --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 
   kubectl delete -n argocd applicationset cluster-addons
+  kubectl delete -n argocd svc argo-cd-argocd-server
+
   kubectl delete -n argocd applicationset addons-aws-ingress-nginx
   kubectl delete svc -n ingress-nginx ingress-nginx-controller
   kubectl delete -n argocd applicationset addons-argocd
-  kubectl delete -n argocd svc argo-cd-argocd-server
   kubectl delete ing -n argocd argo-cd-argocd-server
   
 fi

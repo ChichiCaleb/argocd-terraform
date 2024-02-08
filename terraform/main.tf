@@ -114,7 +114,7 @@ module "gitops_bridge_bootstrap" {
     set = [
       {
         name  = "server.service.type"
-        value = "LoadBalancer"
+        value = "ingress"
       }
     ]
     set_sensitive = [
