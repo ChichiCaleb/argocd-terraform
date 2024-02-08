@@ -111,12 +111,12 @@ module "gitops_bridge_bootstrap" {
   apps       = local.argocd_apps
   argocd = {
     create_namespace = false
-    set = [
-      {
-        name  = "server.service.type"
-        value = "ingress"
-      }
-    ]
+    # set = [
+    #   {
+    #     name  = "server.service.type"
+    #     value = "LoadBalancer"
+    #   }
+    # ]
     set_sensitive = [
       {
         name  = "configs.secret.argocdServerAdminPassword"
