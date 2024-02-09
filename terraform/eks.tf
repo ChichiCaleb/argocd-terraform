@@ -14,8 +14,6 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-   manage_aws_auth_configmap = true
-
   eks_managed_node_groups = {
     initial = {
       instance_types = ["t3.medium"]

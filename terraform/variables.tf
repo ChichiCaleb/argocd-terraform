@@ -1,21 +1,5 @@
 
-variable "domain_name" {
-  description = "Route 53 domain name"
-  type        = string
-  default     = "calebs.xyz"
-}
 
-variable "business_divsion" {
-  description = "Business Division in the large organization this Infrastructure belongs"
-  type = string
-  default = "HR"
-}
-
-variable "environment" {
-   description = "deployment environment "
-  type        = string
-  default     = "staging"
-}
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
   type        = bool
@@ -45,38 +29,52 @@ variable "addons" {
   description = "Kubernetes addons"
   type        = any
   default = {
+    # aws
+    enable_cert_manager                 = true
+    enable_aws_ebs_csi_resources        = true # generate gp2 and gp3 storage classes for ebs-csi
+    enable_aws_cloudwatch_metrics       = true
+    enable_external_secrets             = true
+    enable_aws_load_balancer_controller = true
+    enable_aws_for_fluentbit            = true
+    enable_karpenter                    = false
+    enable_aws_ingress_nginx            = true # inginx configured with AWS NLB
+    # oss
+    enable_metrics_server = true
+    enable_kyverno        = true
+    # Enable if want argo manage argo from gitops
+    enable_argocd = false
+
+    enable_aws_efs_csi_driver                    = false
+    enable_aws_fsx_csi_driver                    = false
+    enable_aws_privateca_issuer                  = false
+    enable_cluster_autoscaler                    = false
+    enable_external_dns                          = false
+    enable_fargate_fluentbit                     = false
+    enable_aws_node_termination_handler          = false
+    enable_velero                                = false
+    enable_aws_gateway_api_controller            = false
+    enable_aws_secrets_store_csi_driver_provider = false
     enable_ack_apigatewayv2                      = false
     enable_ack_dynamodb                          = false
-    enable_ack_eventbridge                       = false
-    enable_ack_prometheusservice                 = false
-    enable_ack_rds                               = false
     enable_ack_s3                                = false
-    enable_argocd                                = true
-    enable_argo_events                           = false
-    enable_argo_rollouts                         = false
-    enable_argo_workflows                        = false
-    enable_argocd_image_updater                  = true
-    enable_aws_argocd_ingress                    = true
-    enable_cert_manager                          = true
-    enable_aws_cloudwatch_metrics                = true
-    enable_cluster_autoscaler                    = true
-    enable_aws_ebs_csi_resources                 = true # generate gp2 and gp3 storage classes for ebs-csi
-    enable_aws_efs_csi_driver                    = false
-    enable_external_dns                          = true
-    enable_external_secrets                      = true
-    enable_aws_for_fluentbit                     = true
-    enable_aws_gateway_api_controller            = false
-    enable_ingress_nginx                         = true # inginx configured with AWS NLB
-    enable_kube_prometheus_stack                 = true
-    enable_aws_load_balancer_controller          = true
-    enable_metrics_server                        = true
-    enable_aws_node_termination_handler          = false
-    enable_prometheus_adapter                    = true
-    enable_secrets_store_csi_driver              = true
-    enable_aws_secrets_store_csi_driver_provider = true
-    enable_vpa                                   = false
-    
-    }
+    enable_ack_rds                               = false
+    enable_ack_prometheusservice                 = false
+    enable_ack_emrcontainers                     = false
+    enable_ack_sfn                               = false
+    enable_ack_eventbridge                       = false
+
+    enable_argo_rollouts                   = false
+    enable_argo_events                     = false
+    enable_argo_workflows                  = false
+    enable_cluster_proportional_autoscaler = false
+    enable_gatekeeper                      = false
+    enable_gpu_operator                    = false
+    enable_ingress_nginx                   = false
+    enable_kube_prometheus_stack           = false
+    enable_prometheus_adapter              = false
+    enable_secrets_store_csi_driver        = false
+    enable_vpa                             = false
+  }
 }
 
 # Addons Git
@@ -103,7 +101,7 @@ variable "gitops_addons_basepath" {
 variable "gitops_addons_path" {
   description = "Git repository path for addons"
   type        = string
-  default     = "control-plane/addons"
+  default     = "bootstrap/control-plane/addons"
 }
 # Workloads Git
 variable "gitops_workload_org" {
