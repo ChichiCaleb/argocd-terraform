@@ -72,14 +72,13 @@ locals {
 # GitOps Bridge: Bootstrap for In-Cluster
 ################################################################################
 module "gitops_bridge_bootstrap" {
-  # source = "github.com/gitops-bridge-dev/gitops-bridge-argocd-bootstrap-terraform?ref=v2.0.0"
-  source = "gitops-bridge-dev/gitops-bridge/helm"
+ source = "gitops-bridge-dev/gitops-bridge/helm"
 
   cluster = {
     metadata = local.cluster_metadata
     addons   = local.cluster_labels
   }
-  #apps       = local.argocd_apps
+ 
   argocd = {
     create_namespace = false
     set = [
@@ -101,20 +100,81 @@ module "gitops_bridge_bootstrap" {
 ################################################################################
 # GitOps Bridge: Bootstrap for Apps
 ################################################################################
-module "argocd" {
-  source = "./modules/argocd-bootstrap"
 
-  count = var.enable_gitops_auto_bootstrap ? 1 : 0
+resource "argocd_application" "bootstrap_addons" {
 
-  addons = {
-    repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
-    path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
-    target_revision = var.gitops_addons_revision
+   count = var.enable_gitops_auto_bootstrap ? 1 : 0
+
+  metadata {
+    name      = "bootstrap-addons"
+    namespace = "argocd"
+    labels = {
+      cluster = "in-cluster"
+    }
   }
-  workloads = {
-    repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
-    path            = "${var.gitops_workload_basepath}bootstrap/workloads"
-    target_revision = var.gitops_addons_revision
+  cascade = true
+  wait    = true
+  spec {
+    project = "default"
+    destination {
+      name      = "in-cluster"
+      namespace = "argocd"
+    }
+    source {
+      repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
+      path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
+      target_revision = var.gitops_addons_revision
+      directory {
+        recurse = true
+        
+      }
+    }
+    sync_policy {
+      automated {
+        prune     = true
+        self_heal = true
+      }
+    }
   }
-  depends_on = [module.gitops_bridge_bootstrap]
+   depends_on = [module.gitops_bridge_bootstrap]
+}
+
+
+resource "argocd_application" "bootstrap_workloads" {
+
+   count = var.enable_gitops_auto_bootstrap ? 1 : 0
+
+
+  metadata {
+    name      = "bootstrap-workloads"
+    namespace = "argocd"
+    labels = {
+      cluster = "in-cluster"
+    }
+  }
+  cascade = true
+  wait    = true
+  spec {
+    project = "default"
+    destination {
+      name      = "in-cluster"
+      namespace = "argocd"
+    }
+    source {
+      repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
+      path            = "${var.gitops_workload_basepath}bootstrap/workloads"
+      target_revision = var.gitops_addons_revision
+      directory {
+        recurse = true
+       
+      }
+    }
+    sync_policy {
+      automated {
+        prune     = true
+        self_heal = true
+      }
+    }
+  }
+  depends_on = [module.gitops_bridge_bootstrap, argocd_application.bootstrap_addons ]
 }
