@@ -6,10 +6,10 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
 [[ -n "${DEBUG:-}" ]] && set -x
 
-# # Delete the Ingress/SVC before removing the addons
-# TMPFILE=$(mktemp)
-# terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
-# # check if TMPFILE contains the string "No outputs found"
+# Delete the Ingress/SVC before removing the addons
+TMPFILE=$(mktemp)
+terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
+# check if TMPFILE contains the string "No outputs found"
 # if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
 #   source "$TMPFILE"
 #   kubectl delete -n argocd applicationset workloads

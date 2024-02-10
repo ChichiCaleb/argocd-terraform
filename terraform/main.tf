@@ -147,8 +147,8 @@ resource "argocd_application" "bootstrap_addons" {
     }
     sync_policy {
       automated {
-        prune     = true
-        self_heal = true
+        # prune     = true
+        # self_heal = true
       }
     }
   }
@@ -187,8 +187,8 @@ resource "argocd_application" "bootstrap_workloads" {
     }
     sync_policy {
       automated {
-        prune     = true
-        self_heal = true
+        # prune     = true
+        # self_heal = true
       }
     }
   }
