@@ -1,4 +1,8 @@
-
+variable "domain_name" {
+  description = "Route 53 domain name"
+  type        = string
+  default     = "calebs.xyz"
+}
 
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
@@ -43,12 +47,12 @@ variable "addons" {
     enable_kyverno        = true
     # Enable if want argo manage argo from gitops
     enable_argocd = false
-
+    enable_aws_argocd_ingress           = true
     enable_aws_efs_csi_driver                    = false
     enable_aws_fsx_csi_driver                    = false
     enable_aws_privateca_issuer                  = false
     enable_cluster_autoscaler                    = false
-    enable_external_dns                          = false
+    enable_external_dns                          = true
     enable_fargate_fluentbit                     = false
     enable_aws_node_termination_handler          = false
     enable_velero                                = false

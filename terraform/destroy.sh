@@ -19,6 +19,8 @@ ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
 #   kubectl delete -n argocd applicationset addons-argocd
 #   kubectl delete -n argocd svc argo-cd-argocd-server
 #   kubectl delete get svc -n argocd argo-cd-argocd-server
+
+# kubectl delete ing -n argocd argo-cd-argocd-server
 # fi
 
 terraform destroy -target="module.argocd" -auto-approve
