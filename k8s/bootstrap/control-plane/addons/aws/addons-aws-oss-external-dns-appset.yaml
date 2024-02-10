@@ -63,7 +63,10 @@ spec:
                 annotations:
                   eks.amazonaws.com/role-arn: {{.metadata.annotations.external_dns_iam_role_arn}}
               
-              domainFilters: {{.metadata.annotations.external_dns_domain_filters}}
+              domainFilters:
+               
+                - {{default "" .metadata.annotations.eks_cluster_domain}}
+                  # {{.metadata.annotations.external_dns_domain_filters}}
               txtOwnerId: {{.metadata.annotations.aws_cluster_name}}
               policy: {{default "upsert-only" .metadata.annotations.external_dns_policy}}
       destination:
