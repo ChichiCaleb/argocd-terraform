@@ -9,19 +9,24 @@ ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
 # Delete the Ingress/SVC before removing the addons
 TMPFILE=$(mktemp)
 terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
-# check if TMPFILE contains the string "No outputs found"
-# if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
-#   source "$TMPFILE"
-#   kubectl delete -n argocd applicationset workloads
-#   kubectl delete -n argocd applicationset cluster-addons
-#   kubectl delete -n argocd applicationset addons-aws-ingress-nginx
-#   kubectl delete svc -n ingress-nginx ingress-nginx-controller
-#   kubectl delete -n argocd applicationset addons-argocd
-#   kubectl delete -n argocd svc argo-cd-argocd-server
-#   kubectl delete get svc -n argocd argo-cd-argocd-server
+check if TMPFILE contains the string "No outputs found"
+if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
+  source "$TMPFILE"
+  kubectl delete -n argocd applicationset workloads
+  kubectl delete -n argocd applicationset cluster-addons
+  kubectl delete -n argocd applicationset addons-aws-ingress-nginx
+  kubectl delete svc -n ingress-nginx ingress-nginx-controller
+  kubectl delete -n argocd applicationset addons-argocd
+  kubectl delete -n argocd svc argo-cd-argocd-server
+  kubectl delete get svc -n argocd argo-cd-argocd-server
 
-# kubectl delete ing -n argocd argo-cd-argocd-server
-# fi
+kubectl delete ing -n argocd argo-cd-argocd-server
+fi
+killall kubectl
+kubectl proxy &
+kubectl get ns argocd -o json | \
+  jq '.spec.finalizers=[]' | \
+  curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-
 
 terraform destroy -target="module.argocd" -auto-approve
 terraform destroy -target="module.gitops_bridge_bootstrap" -auto-approve
