@@ -31,10 +31,10 @@ spec:
 
   tls:
   - hosts:
-    - "*.{{.metadata.annotations.external_dns_domain_filters}}"
+    - "*.{{metadata.annotations.external_dns_domain_filters}}"
  
   rules:
-    - host: '{{.metadata.annotations.external_dns_domain_filters}}'
+    - host: '{{metadata.annotations.external_dns_domain_filters}}'
       http:
         paths:
           - path: /?(.*)
