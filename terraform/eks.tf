@@ -57,14 +57,7 @@ module "eks" {
       self        = true
     }
 
-    ingress_allow_access_from_control_plane = {
-    description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
-    protocol                      = "tcp"
-    from_port                     = 9443
-    to_port                       = 9443
-    type                          = "ingress"
-    source_cluster_security_group = true
-    }
+ 
   }
   tags = local.tags
 }
