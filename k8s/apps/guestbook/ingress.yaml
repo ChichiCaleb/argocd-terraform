@@ -5,7 +5,7 @@ metadata:
   namespace: staging  
   annotations:
     # Load Balancer Name
-    # alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
+    alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
     # Ingress Core Settings  
     alb.ingress.kubernetes.io/scheme: internet-facing    
     # Health Check Settings
@@ -25,14 +25,11 @@ metadata:
     # Target type: Ip (Defaults to Instance if not specified)
     alb.ingress.kubernetes.io/target-type :  ip
     # Ingress Groups
-    # alb.ingress.kubernetes.io/group.name: apps.web
-    # alb.ingress.kubernetes.io/group.order: '20'
+    alb.ingress.kubernetes.io/group.name: apps.web
+    alb.ingress.kubernetes.io/group.order: '20'
 spec:
   ingressClassName: alb
-  # containers:
-  # - args:
-  #   - --enable-waf=false
-  #   - --enable-wafv2=false
+
   tls:
   - hosts:
     - "*.calebs.xyz"

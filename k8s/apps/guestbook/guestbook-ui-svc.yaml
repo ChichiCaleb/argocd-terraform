@@ -4,6 +4,7 @@ metadata:
   name: guestbook-ui
   namespace: staging 
 spec:
+  
   selector:
     app: guestbook-ui
   ports: 
