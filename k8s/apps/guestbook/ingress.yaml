@@ -28,7 +28,7 @@ metadata:
     alb.ingress.kubernetes.io/group.name: apps.web
     alb.ingress.kubernetes.io/group.order: '20'
 spec:
-  ingressClassName: alb
+  ingressClassName: "alb"
 
   tls:
   - hosts:
