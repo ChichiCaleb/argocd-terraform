@@ -70,11 +70,17 @@ spec:
                 ingress:
                   enabled: true
                   annotations:
+                    alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
+
                     alb.ingress.kubernetes.io/scheme: "internet-facing"
                     alb.ingress.kubernetes.io/target-type: "ip"
                     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
                     alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
                     alb.ingress.kubernetes.io/tags: "Environment=hub,GitOps=true"
+                    
+                    alb.ingress.kubernetes.io/group.name: apps.web
+                    alb.ingress.kubernetes.io/group.order: '10'
+
                   ingressClassName: "alb"
                   hosts: {{.metadata.annotations.argocd_hosts}}
                   tls:
