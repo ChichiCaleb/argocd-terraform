@@ -29,7 +29,10 @@ metadata:
     alb.ingress.kubernetes.io/group.order: '20'
 spec:
   ingressClassName: alb
-
+  containers:
+  - args:
+    - --enable-waf=false
+    - --enable-wafv2=false
   tls:
   - hosts:
     - "*.calebs.xyz"
