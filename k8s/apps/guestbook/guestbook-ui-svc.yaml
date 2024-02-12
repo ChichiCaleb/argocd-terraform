@@ -4,6 +4,7 @@ metadata:
   name: guestbook-ui
   namespace: staging 
 spec:
+  type: LoadBalancer 
   selector:
     app: guestbook-ui
   ports: 
