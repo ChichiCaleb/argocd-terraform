@@ -31,10 +31,10 @@ spec:
 
   tls:
   - hosts:
-    - "*.{{metadata.annotations.external_dns_domain_filters}}"
+    - "*.calebs.xyz"
  
   rules:
-    - host: '{{metadata.annotations.external_dns_domain_filters}}'
+    - host: "calebs.xyz"
       http:
         paths:
           - path: /?(.*)
