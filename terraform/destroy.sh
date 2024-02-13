@@ -13,24 +13,30 @@ check if TMPFILE contains the string "No outputs found"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   source "$TMPFILE"
 
-  kubectl delete -n argocd applicationset workloads
-  kubectl delete -n argocd applicationset cluster-addons
+  # kubectl delete -n argocd applicationset workloads
+  # kubectl delete -n argocd applicationset cluster-addons
 
-  kubectl delete -n argocd applicationset addons-aws-ingress-nginx
-  kubectl delete svc -n ingress-nginx ingress-nginx-controller
-  kubectl delete -n argocd applicationset addons-argocd
+  # kubectl delete -n argocd applicationset addons-aws-ingress-nginx
+  # kubectl delete svc -n ingress-nginx ingress-nginx-controller
+  # kubectl delete -n argocd applicationset addons-argocd
   kubectl delete -n argocd svc argo-cd-argocd-server
+  kubectl delete -n staging svc guestbook-ui
 
-  kubectl delete get svc -n argocd argo-cd-argocd-server
+  # kubectl delete get svc -n argocd argo-cd-argocd-server
 
  kubectl delete ing -n argocd argo-cd-argocd-server
+ kubectl delete ing -n staging guestbook-ui
 
  
-killall kubectl
-kubectl proxy &
-kubectl get ns argocd -o json | \
-  jq '.spec.finalizers=[]' | \
-  curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-
+ kubectl patch ns argocd  \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+
+# killall kubectl
+# kubectl proxy &
+# kubectl get ns argocd -o json | \
+#   jq '.spec.finalizers=[]' | \
+#   curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-
 
 fi
 
