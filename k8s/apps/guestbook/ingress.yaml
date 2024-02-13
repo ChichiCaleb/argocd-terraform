@@ -24,6 +24,8 @@ metadata:
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     # Target type: Ip (Defaults to Instance if not specified)
     alb.ingress.kubernetes.io/target-type :  ip
+
+    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http2.enabled=true
     # Ingress Groups
     alb.ingress.kubernetes.io/group.name: apps.web
     alb.ingress.kubernetes.io/group.order: '20'

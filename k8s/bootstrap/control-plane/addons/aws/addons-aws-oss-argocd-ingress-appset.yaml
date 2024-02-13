@@ -77,6 +77,7 @@ spec:
                     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
                     alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
                     alb.ingress.kubernetes.io/tags: "Environment=hub,GitOps=true"
+
                     
                     alb.ingress.kubernetes.io/group.name: apps.web
                     alb.ingress.kubernetes.io/group.order: '10'

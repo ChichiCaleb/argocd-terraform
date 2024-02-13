@@ -9,7 +9,7 @@ ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
 # Delete the Ingress/SVC before removing the addons
 TMPFILE=$(mktemp)
 terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
-check if TMPFILE contains the string "No outputs found"
+# check if TMPFILE contains the string "No outputs found"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   source "$TMPFILE"
 
@@ -19,18 +19,8 @@ if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   # kubectl delete -n argocd applicationset addons-aws-ingress-nginx
   # kubectl delete svc -n ingress-nginx ingress-nginx-controller
   # kubectl delete -n argocd applicationset addons-argocd
-  kubectl delete -n argocd svc argo-cd-argocd-server
-  kubectl delete -n staging svc guestbook-ui
+kubectl delete ns argocd 
 
-  # kubectl delete get svc -n argocd argo-cd-argocd-server
-
- kubectl delete ing -n argocd argo-cd-argocd-server
- kubectl delete ing -n staging guestbook-ui
-
- 
- kubectl patch ns argocd  \
-  --type json \
-  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 
 # killall kubectl
 # kubectl proxy &
@@ -38,16 +28,33 @@ if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
 #   jq '.spec.finalizers=[]' | \
 #   curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-
 
+
+
+  # kubectl delete -n argocd svc argo-cd-argocd-server
+  # kubectl delete -n staging svc guestbook-ui
+  # kubectl delete ing -n staging guestbook-ui
+  # kubectl delete ing -n argocd argo-cd-argocd-server
+
+  # kubectl delete get svc -n argocd argo-cd-argocd-server
+
+
+
+
+ 
+
+
+
+
 fi
 
 
 
 
-terraform destroy -target="module.argocd" -auto-approve
-terraform destroy -target="module.gitops_bridge_bootstrap" -auto-approve
-terraform destroy -target="module.eks_blueprints_addons" -auto-approve
-terraform destroy -target="module.eks" -auto-approve
-terraform destroy -target="module.vpc" -auto-approve
+# terraform destroy -target="module.argocd" -auto-approve
+# terraform destroy -target="module.gitops_bridge_bootstrap" -auto-approve
+# terraform destroy -target="module.eks_blueprints_addons" -auto-approve
+# terraform destroy -target="module.eks" -auto-approve
+# terraform destroy -target="module.vpc" -auto-approve
 terraform destroy -auto-approve
 
 
