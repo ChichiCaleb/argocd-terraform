@@ -61,7 +61,7 @@ variable "addons" {
     enable_kyverno        = true
     # Enable if want argo manage argo from gitops
     enable_argocd = false
-
+    enable_aws_argocd_ingress                    = true
     enable_aws_efs_csi_driver                    = false
     enable_aws_fsx_csi_driver                    = false
     enable_aws_privateca_issuer                  = false
