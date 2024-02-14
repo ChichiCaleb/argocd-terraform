@@ -36,7 +36,7 @@ variable "vpc_cidr" {
 variable "region" {
   description = "AWS region"
   type        = string
-  default     = "us-east-1"
+  default     = "us-west-2"
 }
 variable "kubernetes_version" {
   description = "Kubernetes version"
@@ -49,19 +49,19 @@ variable "addons" {
   default = {
     # aws
     enable_cert_manager                 = true
-    enable_aws_ebs_csi_resources        = true #generate gp2 and gp3 storage classes for ebs-csi
+    enable_aws_ebs_csi_resources        = true # generate gp2 and gp3 storage classes for ebs-csi
     enable_aws_cloudwatch_metrics       = true
     enable_external_secrets             = true
     enable_aws_load_balancer_controller = true
     enable_aws_for_fluentbit            = true
     enable_karpenter                    = false
-    enable_aws_ingress_nginx            = false # inginx configured with AWS NLB
+    enable_aws_ingress_nginx            = true # inginx configured with AWS NLB
     # oss
     enable_metrics_server = true
     enable_kyverno        = true
     # Enable if want argo manage argo from gitops
-    enable_aws_argocd = true
-    # enable_aws_argocd_ingress           = true
+    enable_argocd = true
+
     enable_aws_efs_csi_driver                    = false
     enable_aws_fsx_csi_driver                    = false
     enable_aws_privateca_issuer                  = false

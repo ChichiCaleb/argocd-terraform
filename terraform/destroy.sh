@@ -12,28 +12,10 @@ terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   source "$TMPFILE"
 
-  terraform destroy -target="module.argocd" -auto-approve
-
-  kubectl delete -n argocd svc argo-cd-argocd-server
-  kubectl delete ing -n argocd argo-cd-argocd-server
-  kubectl delete -n staging svc guestbook-ui
-  kubectl delete ing -n staging guestbook-ui
-  kubectl delete svc -n ingress-nginx ingress-nginx-controller
-
-  killall kubectl 
-  kubectl proxy &
-  kubectl get ns argocd -o json | \
-  jq '.spec.finalizers=[]' | \
-  curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @- 
-
-
-  terraform destroy -target="module.gitops_bridge_bootstrap" -auto-approve
-  terraform destroy -target="module.eks_blueprints_addons" -auto-approve
-  terraform destroy -target="module.eks" -auto-approve
-  terraform destroy -target="module.vpc" -auto-approve
+kubectl patch ns argocd \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/spec/finalizers" } ]' 
 
 fi
 
 terraform destroy -auto-approve
-
-

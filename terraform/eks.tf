@@ -17,7 +17,6 @@ module "eks" {
   eks_managed_node_groups = {
     initial = {
       instance_types = ["t3.medium"]
-    
 
       min_size     = 1
       max_size     = 4
@@ -48,7 +47,6 @@ module "eks" {
   }
   # Extend node-to-node security group rules
   node_security_group_additional_rules = {
-
     ingress_nginx = {
       description = "Allow nginx ingress port 80 node to node"
       protocol    = "tcp"
@@ -57,9 +55,6 @@ module "eks" {
       type        = "ingress"
       self        = true
     }
-
-
- 
   }
   tags = local.tags
 }
