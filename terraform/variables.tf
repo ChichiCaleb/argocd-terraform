@@ -50,7 +50,7 @@ variable "addons" {
     # aws
     enable_cert_manager                 = true
     enable_aws_ebs_csi_resources        = true # generate gp2 and gp3 storage classes for ebs-csi
-    enable_aws_cloudwatch_metrics       = true
+    enable_aws_cloudwatch_metrics       = false
     enable_external_secrets             = true
     enable_aws_load_balancer_controller = true
     enable_aws_for_fluentbit            = true
@@ -60,7 +60,7 @@ variable "addons" {
     enable_metrics_server = true
     enable_kyverno        = true
     # Enable if want argo manage argo from gitops
-    enable_argocd = true
+    enable_argocd = false
 
     enable_aws_efs_csi_driver                    = false
     enable_aws_fsx_csi_driver                    = false
