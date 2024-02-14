@@ -55,7 +55,7 @@ spec:
     spec:
       accessModes:
         -ReadWriteOnce
-      # storageClassName: ebs-sc  "" for default storage
+      storageClassName: "" 
       resources:
         requests:
           storage: 4Gi
