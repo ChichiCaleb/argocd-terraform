@@ -50,7 +50,7 @@ spec:
 
   volumeClaimTemplate:
   - metadata:
-       name: ebs-postgres-pv-claim
+       name: postgres-persistent-storage
        namespace: staging
     spec:
       accessModes:
