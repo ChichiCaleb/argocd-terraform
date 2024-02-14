@@ -13,6 +13,7 @@ spec:
   template: 
     metadata: 
       name: postgres
+      namespace: staging  
       labels: 
         app: db
     spec:
