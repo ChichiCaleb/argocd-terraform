@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: calcom-config
+  namespace: staging  
+ 
+data: 
+
+  # Summary of terms:
+  # - The codebase has to stay open source, whether it was modified or not
+  # - You can not repackage or sell the codebase
+  # - Acquire a commercial license to remove these terms by emailing: license@cal.com
+ NEXT_PUBLIC_LICENSE_CONSENT: ''
+
+ NEXT_PUBLIC_WEBAPP_URL: http://localhost:3000
+
+  # Configure NEXTAUTH_URL manually if needed, otherwise it will resolve to {NEXT_PUBLIC_WEBAPP_URL}/api/auth
+ NEXTAUTH_URL: http://localhost:3000/api/auth
+
+ GOOGLE_API_CREDENTIALS : ''
+
+ # Set this to '1' if you don't want Cal to collect anonymous usage
+ CALCOM_TELEMETRY_DISABLED: ''
+
+  # Used for the Office 365 / Outlook.com Calendar integration
+ MS_GRAPH_CLIENT_ID: ''
+ MS_GRAPH_CLIENT_SECRET: ''
+
+  # Used for the Zoom integration
+ ZOOM_CLIENT_ID: ''
+ ZOOM_CLIENT_SECRET: ''
+
+  # E-mail settings
+  # Configures the global From: header whilst sending emails.
+ EMAIL_FROM: notifications@example.com
+
+ NODE_ENV: production
+
+
+
+

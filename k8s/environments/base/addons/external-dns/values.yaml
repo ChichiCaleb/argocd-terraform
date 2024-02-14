@@ -1,2 +1,3 @@
 # Helm chart values
 policy : "sync" # Allows to delete DNS records
+
