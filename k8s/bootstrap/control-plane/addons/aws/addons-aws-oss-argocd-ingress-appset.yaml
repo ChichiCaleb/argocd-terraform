@@ -1,13 +1,3 @@
-apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  name: alb-default
-  annotations:
-    ingressclass.kubernetes.io/is-default-class: "true"
-spec:
-  controller: ingress.k8s.aws/alb
-
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -32,7 +22,7 @@ spec:
                   - key: akuity.io/argo-cd-cluster-name
                     operator: NotIn
                     values: [in-cluster]
-                  - key: enable_aws_argocd
+                  - key: enable_argocd
                     operator: In
                     values: ['true']
           - clusters:
@@ -92,7 +82,7 @@ spec:
                     alb.ingress.kubernetes.io/group.name: "apps.web"
                     alb.ingress.kubernetes.io/group.order: "10"
 
-                  ingressClassName: "alb-default"
+                  ingressClassName: "alb"
                   hosts: {{.metadata.annotations.argocd_hosts}}
                   tls:
                   - hosts: {{.metadata.annotations.argocd_hosts}}
