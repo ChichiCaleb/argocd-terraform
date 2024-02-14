@@ -4,6 +4,20 @@ variable "domain_name" {
   default     = "calebs.xyz"
 }
 
+# Environment Variable
+variable "environment" {
+  description = "Environment Variable used as a prefix"
+  type = string
+  default = "staging"
+}
+# Business Division
+variable "business_divsion" {
+  description = "Business Division in the large organization this Infrastructure belongs"
+  type = string
+  default = "HR"
+}
+
+
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
   type        = bool
@@ -46,8 +60,8 @@ variable "addons" {
     enable_metrics_server = true
     enable_kyverno        = true
     # Enable if want argo manage argo from gitops
-    enable_argocd = false
-    enable_aws_argocd_ingress           = true
+    enable_aws_argocd = true
+    # enable_aws_argocd_ingress           = true
     enable_aws_efs_csi_driver                    = false
     enable_aws_fsx_csi_driver                    = false
     enable_aws_privateca_issuer                  = false

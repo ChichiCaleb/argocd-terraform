@@ -51,11 +51,12 @@ provider "argocd" {
 data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {}
 locals {
-  name   = "ex-${replace(basename(path.cwd), "_", "-")}"
+  # name   = "ex-${replace(basename(path.cwd), "_", "-")}"
+  name = "${var.business_divsion}-${var.environment}-eks"
   region = var.region
   tags = {
     Blueprint  = local.name
-    GithubRepo = "github.com/ChichiCaleb/gitops"
+    GithubRepo = "github.com/ChichiCaleb/argocd-terraform"
   }
 }
 provider "aws" {

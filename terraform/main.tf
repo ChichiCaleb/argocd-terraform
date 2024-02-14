@@ -117,6 +117,7 @@ module "gitops_bridge_bootstrap" {
 # GitOps Bridge: Bootstrap for Apps
 ################################################################################
 
+
 resource "argocd_application" "bootstrap_addons" {
 
    count = var.enable_gitops_auto_bootstrap ? 1 : 0
