@@ -54,6 +54,10 @@ locals {
       aws_account_id   = data.aws_caller_identity.current.account_id
       aws_vpc_id       = module.vpc.vpc_id
     },
+      {
+      argocd_hosts                = "[${local.argocd_host}]"
+      external_dns_domain_filters = "[${local.domain_name}]"
+    },
     {
       addons_repo_url      = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
       addons_repo_basepath = var.gitops_addons_basepath
