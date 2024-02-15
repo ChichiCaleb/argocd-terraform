@@ -36,10 +36,10 @@ spec:
 
   tls:
   - hosts:
-    - web.calebs.xyz
+    - calebs.xyz
 
   rules:
-    - host: web.calebs.xyz
+    - host: calebs.xyz
       http:
         paths:
           - path: /?(.*)
