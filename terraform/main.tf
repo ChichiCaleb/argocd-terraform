@@ -139,7 +139,7 @@ module "argocd" {
 # To get the hosted zone to be use in argocd domain
 data "aws_route53_zone" "this" {
   count        = local.enable_ingress ? 1 : 0
-  name         = "*.${local.domain_name}"
+  name         = local.domain_name
   private_zone = local.is_route53_private_zone
 }
 
