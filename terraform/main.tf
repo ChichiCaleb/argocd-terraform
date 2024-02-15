@@ -145,7 +145,7 @@ data "aws_route53_zone" "this" {
 module "acm_ops" {
   source = "./modules/aws_acm_certificate"
   domain_names = [local.domain_name, "*.${local.domain_name}"]
-  zone_id = data.aws_route53_zone.this[0].zone_id
+  zone_id = data.aws_route53_zone.this.zone_id
 
 }
 
