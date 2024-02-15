@@ -38,9 +38,8 @@ module "eks_blueprints_addons" {
 
 locals {
 
-  enable_ingress          = true
+  
   is_route53_private_zone = false
-
   domain_name      = var.domain_name
   argocd_subdomain = "argocd"
   argocd_host      = "${local.argocd_subdomain}.${local.domain_name}"
@@ -57,7 +56,7 @@ locals {
       {
       argocd_hosts                = "[${local.argocd_host}]"
       external_dns_domain_filters = "[${local.domain_name}]"
-      aws_certificate_arn             = aws_acm_certificate.cert[0].arn
+      aws_certificate_arn         = module.acm_ops.arn
     },
     {
       addons_repo_url      = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
@@ -137,12 +136,18 @@ module "argocd" {
 ################################################################################
 # Route 53
 ################################################################################
-# To get the hosted zone to be use in argocd domain
-# data "aws_route53_zone" "this" {
-#   count        = local.enable_ingress ? 1 : 0
-#   name         = local.domain_name
-#   private_zone = local.is_route53_private_zone
-# }
+
+data "aws_route53_zone" "this" {
+  name         = local.domain_name
+  private_zone = local.is_route53_private_zone
+}
+
+module "acm_ops" {
+  source = "./modules/aws_acm_certificate"
+  domain_names = [local.domain_name, "*.${local.domain_name}"]
+  zone_id = data.aws_route53_zone.this[0].zone_id
+
+}
 
 
 ################################################################################
@@ -176,35 +181,3 @@ module "argocd" {
 # }
 
 
-resource "aws_acm_certificate" "certificate" {
-  
-  domain_name       = local.domain_name
-  validation_method = "DNS"
-  subject_alternative_names = [
-    "*.${local.domain_name}"
-   ]
- lifecycle {
-    create_before_destroy = true
-  }
-}
-
-module "acm-multiple-domains" {
-
-  for_each = {for domain in aws_acm_certificate.certificate.domain_validation_options: domain.domain_name => domain}
-
-  source  = "cebollia/acm-multiple-domains/aws"
-  version = "1.0.0"
-
-  certificate_arn = aws_acm_certificate.certificate.arn
-  domain          = each.key
-  name            = each.value.resource_record_name
-  type            = each.value.resource_record_type
-  record          = each.value.resource_record_value
-  ttl             = 60
-}
-
-resource "aws_acm_certificate_validation" "validate" {
-  
-  certificate_arn         = aws_acm_certificate.certificate.arn
-  validation_record_fqdns = [for domain in module.acm-r53-records : domain.record.fqdn ]
-}
