@@ -14,7 +14,7 @@ spec:
               values:
                 addonChart: aws-load-balancer-controller
                 # anything not staging or prod use this version
-                addonChartVersion: 1.6.1
+                addonChartVersion: 1.6.2
                 addonChartRepository: https://aws.github.io/eks-charts
               selector:
                 matchExpressions:
@@ -29,13 +29,13 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 1.6.1
+                addonChartVersion: 1.6.2
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 1.6.1
+                addonChartVersion: 1.6.2
   template:
     metadata:
       name: addon-{{name}}-{{values.addonChart}}
@@ -52,10 +52,11 @@ spec:
             releaseName: '{{values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - $values/{{metadata.annotations.addons_repo_basepath}}environments/base/addons/{{values.addonChart}}/values.yaml
+              - $values/{{metadata.annotations.addons_repo_basepath}}environments/default/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
             values: |
+              vpcId: '{{metadata.annotations.aws_vpc_id}}'
               clusterName: {{metadata.annotations.aws_cluster_name}}
               serviceAccount:
                 name: {{metadata.annotations.aws_load_balancer_controller_service_account}}
