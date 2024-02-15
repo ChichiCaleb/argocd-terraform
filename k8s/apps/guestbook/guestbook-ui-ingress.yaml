@@ -22,8 +22,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
     # SSL Redirect Setting
     alb.ingress.kubernetes.io/ssl-redirect: '443'
-    # External DNS - For creating a Record Set in Route53
-    external-dns.alpha.kubernetes.io/hostname: calebs.xyz
+  
     # Target type: Ip (Defaults to Instance if not specified)
     alb.ingress.kubernetes.io/target-type :  ip
 
@@ -35,10 +34,10 @@ spec:
 
   tls:
   - hosts:
-    - calebs.xyz
+    - web.calebs.xyz
 
   rules:
-    - host: calebs.xyz
+    - host: web.calebs.xyz
       http:
         paths:
           - path: /?(.*)
