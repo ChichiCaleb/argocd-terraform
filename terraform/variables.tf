@@ -48,7 +48,7 @@ variable "addons" {
   type        = any
   default = {
     # aws
-    enable_cert_manager                 = true
+    enable_cert_manager                 = false
     enable_aws_ebs_csi_resources        = true # generate gp2 and gp3 storage classes for ebs-csi
     enable_aws_cloudwatch_metrics       = false
     enable_external_secrets             = true

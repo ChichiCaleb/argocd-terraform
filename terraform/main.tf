@@ -57,6 +57,7 @@ locals {
       {
       argocd_hosts                = "[${local.argocd_host}]"
       external_dns_domain_filters = "[${local.domain_name}]"
+      aws_certificate_arn             = aws_acm_certificate.cert[0].arn
     },
     {
       addons_repo_url      = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
@@ -152,6 +153,9 @@ resource "aws_acm_certificate" "cert" {
   count             = local.enable_ingress ? 1 : 0
   domain_name       = "*.${local.domain_name}"
   validation_method = "DNS"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route53_record" "validation" {
