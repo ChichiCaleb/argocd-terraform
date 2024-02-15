@@ -5,10 +5,7 @@ resource "aws_acm_certificate" "main" {
   lifecycle {
     create_before_destroy = true
   }
-  tags {
-    Name = "${replace(var.domain_names[0], "*.", "star.")}"
-    terraform = "true"
-  }
+ 
 }
 
 resource "aws_route53_record" "validation" {
