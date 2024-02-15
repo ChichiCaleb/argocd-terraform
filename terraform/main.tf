@@ -138,39 +138,73 @@ module "argocd" {
 # Route 53
 ################################################################################
 # To get the hosted zone to be use in argocd domain
-data "aws_route53_zone" "this" {
-  count        = local.enable_ingress ? 1 : 0
-  name         = local.domain_name
-  private_zone = local.is_route53_private_zone
-}
+# data "aws_route53_zone" "this" {
+#   count        = local.enable_ingress ? 1 : 0
+#   name         = local.domain_name
+#   private_zone = local.is_route53_private_zone
+# }
 
 
 ################################################################################
 # ACM Certificate
 ################################################################################
 
-resource "aws_acm_certificate" "cert" {
-  count             = local.enable_ingress ? 1 : 0
+# resource "aws_acm_certificate" "cert" {
+#   count             = local.enable_ingress ? 1 : 0
+#   domain_name       = local.domain_name
+#   subject_alternative_names = ["*.${local.domain_name}"]
+#   validation_method = "DNS"
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+
+# resource "aws_route53_record" "validation" {
+#   count           = local.enable_ingress ? 1 : 0
+#   zone_id         = data.aws_route53_zone.this[0].zone_id
+#   name            = tolist(aws_acm_certificate.cert[0].domain_validation_options)[0].resource_record_name
+#   type            = tolist(aws_acm_certificate.cert[0].domain_validation_options)[0].resource_record_type
+#   records         = [tolist(aws_acm_certificate.cert[0].domain_validation_options)[0].resource_record_value]
+#   ttl             = 60
+#   allow_overwrite = true
+# }
+
+# resource "aws_acm_certificate_validation" "this" {
+#   count                   = local.enable_ingress ? 1 : 0
+#   certificate_arn         = aws_acm_certificate.cert[0].arn
+#   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
+# }
+
+
+resource "aws_acm_certificate" "certificate" {
+  
   domain_name       = local.domain_name
-  subject_alternative_names = ["*.${local.domain_name}"]
   validation_method = "DNS"
-  lifecycle {
+  subject_alternative_names = [
+    "*.${local.domain_name}"
+   ]
+ lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_route53_record" "validation" {
-  count           = local.enable_ingress ? 1 : 0
-  zone_id         = data.aws_route53_zone.this[0].zone_id
-  name            = tolist(aws_acm_certificate.cert[0].domain_validation_options)[0].resource_record_name
-  type            = tolist(aws_acm_certificate.cert[0].domain_validation_options)[0].resource_record_type
-  records         = [tolist(aws_acm_certificate.cert[0].domain_validation_options)[0].resource_record_value]
+module "acm-multiple-domains" {
+
+  for_each = {for domain in aws_acm_certificate.certificate.domain_validation_options: domain.domain_name => domain}
+
+  source  = "cebollia/acm-multiple-domains/aws"
+  version = "1.0.0"
+
+  certificate_arn = aws_acm_certificate.certificate.arn
+  domain          = each.key
+  name            = each.value.resource_record_name
+  type            = each.value.resource_record_type
+  record          = each.value.resource_record_value
   ttl             = 60
-  allow_overwrite = true
 }
 
-resource "aws_acm_certificate_validation" "this" {
-  count                   = local.enable_ingress ? 1 : 0
-  certificate_arn         = aws_acm_certificate.cert[0].arn
-  validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
+resource "aws_acm_certificate_validation" "validate" {
+  
+  certificate_arn         = aws_acm_certificate.certificate.arn
+  validation_record_fqdns = [for domain in module.acm-r53-records : domain.record.fqdn ]
 }
