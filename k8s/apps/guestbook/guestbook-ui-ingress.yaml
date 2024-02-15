@@ -18,6 +18,8 @@ metadata:
     alb.ingress.kubernetes.io/success-codes: '200'
     alb.ingress.kubernetes.io/healthy-threshold-count: '2'
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-west-2:499653711972:certificate/3c4fb3be-0d39-48ff-9651-00fcf824ea90"
     ## SSL Settings
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
     # SSL Redirect Setting
