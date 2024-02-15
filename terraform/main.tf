@@ -151,7 +151,8 @@ data "aws_route53_zone" "this" {
 
 resource "aws_acm_certificate" "cert" {
   count             = local.enable_ingress ? 1 : 0
-  domain_name       = "*.${local.domain_name}"
+  domain_name       = local.domain_name
+  subject_alternative_names = ["*.${local.domain_name}"]
   validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
