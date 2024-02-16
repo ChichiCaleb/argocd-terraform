@@ -51,7 +51,8 @@ provider "argocd" {
 data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {}
 locals {
-  name = "${var.business_divsion}-${var.environment}-eks"
+  name = "${terraform.workspace}-eks"
+  environment = terraform.workspace
   region = var.region
   tags = {
     Blueprint  = local.name

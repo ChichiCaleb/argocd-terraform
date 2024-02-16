@@ -71,7 +71,7 @@ locals {
 
   cluster_labels = merge(
     var.addons,
-    { environment = var.environment},
+    { environment = local.environment},
     { kubernetes_version = var.kubernetes_version },
     { aws_cluster_name = module.eks.cluster_name }
   )
@@ -85,9 +85,10 @@ module "gitops_bridge_bootstrap" {
   source = "gitops-bridge-dev/gitops-bridge/helm"
 
   cluster = {
+    cluster_name = module.eks.cluster_name
     metadata = local.cluster_metadata
     addons   = local.cluster_labels
-    environment  = var.environment
+    environment  = local.environment
   }
   
   argocd = {
@@ -177,16 +178,6 @@ resource "aws_acm_certificate_validation" "this" {
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
 
-
-# resource "aws_route53_record" "validation" {
-#   count           = 2
-#   zone_id         = data.aws_route53_zone.this.zone_id
-#   name            = tolist(aws_acm_certificate.cert.domain_validation_options)[count.index].resource_record_name
-#   type            = tolist(aws_acm_certificate.cert.domain_validation_options)[count.index].resource_record_type
-#   records         = [tolist(aws_acm_certificate.cert.domain_validation_options)[count.index].resource_record_value]
-#   ttl             = 60
-#   allow_overwrite = true
-# }
 
 
 

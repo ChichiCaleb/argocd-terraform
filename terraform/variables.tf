@@ -4,21 +4,6 @@ variable "domain_name" {
   default     = "calebs.xyz"
 }
 
-
-# Environment Variable
-variable "environment" {
-  description = "Environment Variable used as a prefix"
-  type = string
-  default = "staging"
-}
-# Business Division
-variable "business_divsion" {
-  description = "Business Division in the large organization this Infrastructure belongs"
-  type = string
-  default = "HR"
-}
-
-
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
   type        = bool
