@@ -22,7 +22,7 @@ spec:
       project: default
       source:
         repoURL: '{{metadata.annotations.workload_repo_url}}'
-        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook'
+        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/staging'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
       destination:
         namespace: guestbook

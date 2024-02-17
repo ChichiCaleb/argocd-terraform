@@ -1,0 +1,10 @@
+---
+namespace: staging
+replicas:
+  - name:  guestbook-ui
+    count: 1
+images:
+  - name: gcr.io/heptio-images/ks-guestbook-demo:0.2
+    # newTag: v0.1.0
+resources:
+  - ../../base

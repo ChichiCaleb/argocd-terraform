@@ -75,6 +75,7 @@ spec:
                     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
                     alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
                     alb.ingress.kubernetes.io/tags: "Environment=hub,GitOps=true"
+                    alb.ingress.kubernetes.io/certificate-arn: {{.metadata.annotations.aws_certificate_arn}}
                   ingressClassName: "alb"
                   hosts: {{.metadata.annotations.argocd_hosts}}
                   tls:

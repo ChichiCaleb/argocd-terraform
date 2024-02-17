@@ -29,4 +29,7 @@ kubectl patch ns argocd \
 
 fi
 
+export GODEBUG=asyncpreemptoff=1
+export TF_REGISTRY_CLIENT_TIMEOUT=20000
 terraform destroy -var-file="workspaces/${env}.tfvars" -auto-approve
+
