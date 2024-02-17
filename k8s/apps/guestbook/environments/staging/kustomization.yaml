@@ -1,10 +1,11 @@
----
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 namespace: staging
 replicas:
-  - name:  guestbook-ui
-    count: 1
+- count: 1
+  name: guestbook-ui
 images:
-  - name: gcr.io/heptio-images/ks-guestbook-demo:0.2
+- name: gcr.io/heptio-images/ks-guestbook-demo:0.2
     # newTag: v0.1.0
 resources:
-  - ../../base
+- ../../base
