@@ -34,6 +34,9 @@ variable "addons" {
   type        = any
   default = {
     # aws
+     # Enable if want argo manage argo from gitops
+    enable_argocd                       = true
+    enable_argocd_image_updater         = true
     enable_cert_manager                 = false
     enable_aws_ebs_csi_resources        = true # generate gp2 and gp3 storage classes for ebs-csi
     enable_aws_cloudwatch_metrics       = false
@@ -42,30 +45,25 @@ variable "addons" {
     enable_aws_for_fluentbit            = true
     enable_karpenter                    = false
     enable_aws_ingress_nginx            = false # inginx configured with AWS NLB
-    # oss
-    enable_metrics_server = true
-    enable_kyverno        = true
-    # Enable if want argo manage argo from gitops
-    enable_argocd = false
-    enable_aws_argocd_ingress                    = true
     enable_aws_efs_csi_driver                    = false
     enable_cluster_autoscaler                    = false
     enable_external_dns                          = true
     enable_velero                                = false
     enable_aws_secrets_store_csi_driver_provider = false
-   
+    # ack
     enable_ack_dynamodb                          = false
     enable_ack_s3                                = false
     enable_ack_rds                               = false
     enable_ack_prometheusservice                 = false
     enable_ack_eventbridge                       = false
-
+    # oss
     enable_argo_rollouts                   = false
     enable_argo_events                     = false
     enable_argo_workflows                  = false
     enable_cluster_proportional_autoscaler = false
-    enable_ingress_nginx                   = false
     enable_kube_prometheus_stack           = false
+    enable_metrics_server                  = true
+    enable_kyverno                         = true
     enable_prometheus_adapter              = false
     enable_secrets_store_csi_driver        = false
     enable_vpa                             = false
