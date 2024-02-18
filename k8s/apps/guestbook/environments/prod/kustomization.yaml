@@ -7,6 +7,7 @@ replicas:
 images:
 - name: gcr.io/heptio-images/ks-guestbook-demo:0.2
     # newTag: v0.1.0
+
 resources:
 - ../../base
 
@@ -22,9 +23,9 @@ patches:
     spec:
       tls:
       - hosts:
-        - staging.calebs.xyz
+        - calebs.xyz
       rules:
-        - host: staging.calebs.xyz
+        - host: calebs.xyz
           http:
             paths:
               - path: /
@@ -34,4 +35,3 @@ patches:
                     name: guestbook-ui
                     port: 
                       number: 80
-   
