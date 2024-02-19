@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: staging
+namespace: prod
 replicas:
 - count: 1
   name: guestbook-ui
@@ -12,6 +12,19 @@ resources:
 - ../../base
 
 patches:
+- target:
+    kind: Service
+    name: guestbook-ui
+  patch: |-
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: guestbook-ui
+    spec:
+     ports: 
+      - port: 8000
+        targetPort: 80
+
 - target:
     kind: Ingress
     name: guestbook-ui
@@ -34,4 +47,4 @@ patches:
                   service:
                     name: guestbook-ui
                     port: 
-                      number: 80
+                      number: 8000

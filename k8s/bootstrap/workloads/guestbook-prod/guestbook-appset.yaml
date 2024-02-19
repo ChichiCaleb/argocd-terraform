@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: workloads
+  name: guestbook
   namespace: argocd
 spec:
   syncPolicy:
@@ -15,18 +15,19 @@ spec:
               values: [in-cluster]
   template:
     metadata:
-      name: workload
+      name: guestbook
+      labels:
+        workload: 'true'
     spec:
       project: default
       source:
         repoURL: '{{metadata.annotations.workload_repo_url}}'
-        path: '{{metadata.annotations.workload_repo_basepath}}bootstrap/workloads'
+        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/prod'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
-        directory:
-          recurse: true
-          exclude: exclude/*
       destination:
-        namespace: argocd
+        namespace: guestbook
         name: '{{name}}'
       syncPolicy:
         automated: {}
+        syncOptions:
+          - CreateNamespace=true

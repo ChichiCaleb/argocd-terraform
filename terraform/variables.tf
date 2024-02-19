@@ -50,14 +50,14 @@ variable "addons" {
     enable_external_dns                          = true
     enable_velero                                = false
     enable_aws_secrets_store_csi_driver_provider = false
-    # ack
+    #  AWS Controllers for Kubernetes (ACK)
     enable_ack_dynamodb                          = false
     enable_ack_s3                                = false
     enable_ack_rds                               = false
     enable_ack_prometheusservice                 = false
     enable_ack_eventbridge                       = false
     # oss
-    enable_argo_rollouts                   = false
+    enable_argo_rollouts                   = true
     enable_argo_events                     = false
     enable_argo_workflows                  = false
     enable_cluster_proportional_autoscaler = false

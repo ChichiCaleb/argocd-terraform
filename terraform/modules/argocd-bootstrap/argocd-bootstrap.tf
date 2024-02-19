@@ -35,7 +35,7 @@ resource "argocd_application" "bootstrap_addons" {
 
 resource "argocd_application" "bootstrap_workloads" {
 
-  metadata {
+ metadata {
     name      = "bootstrap-workloads"
     namespace = "argocd"
     labels = {
@@ -56,8 +56,10 @@ resource "argocd_application" "bootstrap_workloads" {
       target_revision = var.workloads.target_revision
       directory {
         recurse = true
-        exclude = "exclude/*"
-      }
+        exclude =  (terraform.workspace == "staging" ? "{guestbook-prod/*,guestbook-preview/*}" : 
+                   terraform.workspace == "prod" ? "{guestbook-staging/*,guestbook-preview/*}" :
+                   "{guestbook-staging/*,guestbook-prod/*}")
+}
     }
     sync_policy {
       automated {

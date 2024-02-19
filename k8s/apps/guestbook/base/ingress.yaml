@@ -27,7 +27,7 @@ metadata:
 
   
     # Target type: Ip (Defaults to Instance if not specified)
-    alb.ingress.kubernetes.io/target-type :  ip
+    alb.ingress.kubernetes.io/target-type :  instance
 
     # Ingress Groups
     # alb.ingress.kubernetes.io/group.name: apps.web

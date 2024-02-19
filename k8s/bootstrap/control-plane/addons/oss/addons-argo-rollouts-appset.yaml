@@ -55,6 +55,17 @@ spec:
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/base/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
+            values: |
+                  controller:
+                    serviceAccount:
+                      annotations:
+                        eks.amazonaws.com/role-arn: '{{.metadata.annotations.argocd_iam_role_arn}}'
+                  server:
+                    serviceAccount:
+                      annotations:
+                        eks.amazonaws.com/role-arn: '{{.metadata.annotations.argocd_iam_role_arn}}'
+      
+      
       destination:
         namespace: '{{values.addonChart}}'
         name: '{{name}}'
