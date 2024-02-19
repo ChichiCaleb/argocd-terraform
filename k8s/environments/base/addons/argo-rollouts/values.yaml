@@ -1,1 +1,4 @@
 # Helm chart values
+dashboard:
+  # -- Deploy dashboard server
+  enabled: true

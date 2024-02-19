@@ -24,8 +24,7 @@ module "eks_blueprints_addons" {
   enable_aws_for_fluentbit            = var.addons.enable_aws_for_fluentbit
   enable_karpenter                    = var.addons.enable_karpenter
   enable_velero                       = var.addons.enable_velero
-  enable_argocd                       = var.addons.enable_argocd
-  enable_argo_rollouts                = var.addons.enable_argo_rollouts
+
   
 
   
