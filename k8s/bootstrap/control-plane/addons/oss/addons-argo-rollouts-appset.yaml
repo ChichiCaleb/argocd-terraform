@@ -57,29 +57,24 @@ spec:
               - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
             values: |
            
-              server:
-                
-                service:
-                  type: "ClusterIP"
-                ingress:
-                  enabled: true
-                  annotations:
-                    alb.ingress.kubernetes.io/scheme: "internet-facing"
-                    alb.ingress.kubernetes.io/target-type: "ip"
-                    alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
-                    alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
-                    alb.ingress.kubernetes.io/tags: "Environment=hub,GitOps=true"
-                    alb.ingress.kubernetes.io/certificate-arn: {{.metadata.annotations.aws_certificate_arn}}
-                  ingressClassName: "alb"
-                  hosts: "argorollout.calebs.xyz"
-                  tls:
-                  - hosts: "argorollout.calebs.xyz"
-                ingressGrpc:
-                  enabled: true
-                  isAWSALB: true
-                  awsALB:
-                    serviceType: "ClusterIP"  # Instance mode needs type NodePort, IP mode needs type ClusterIP or NodePort
-                    backendProtocolVersion: "GRPC"  # This tells AWS to send traffic from the ALB using HTTP2. Can use gRPC as well if you want to leverage gRPC specific features
+              dashboard:
+                 enabled: true
+                 service:
+                    type: ClusterIP
+                 ingress:
+                    enabled: true
+                    annotations:
+                        alb.ingress.kubernetes.io/scheme: "internet-facing"
+                        alb.ingress.kubernetes.io/target-type: "ip"
+                        alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
+                        alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
+                        alb.ingress.kubernetes.io/tags: "Environment=hub,GitOps=true"
+                        alb.ingress.kubernetes.io/certificate-arn: {{metadata.annotations.aws_certificate_arn}}
+                    ingressClassName: "alb"
+                    hosts: "argorollout.calebs.xyz"
+                    tls:
+                    - hosts: "argorollout.calebs.xyz"
+               
       
       
       destination:
