@@ -27,15 +27,12 @@ kubectl patch ns argocd \
   --type json \
   --patch='[ { "op": "remove", "path": "/spec/finalizers" } ]' 
 
+kubectl delete ing -n $env guestbook-ui
 
 fi
 
 export GODEBUG=asyncpreemptoff=1
 export TF_REGISTRY_CLIENT_TIMEOUT=20000
-terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.argocd" -auto-approve
-terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.gitops_bridge_bootstrap" -auto-approve
-terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.eks_blueprints_addons" -auto-approve
-terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.eks" -auto-approve
-terraform destroy -auto-approve -var-file="workspaces/${env}.tfvars" -target="module.vpc" -auto-approve
+
 terraform destroy -auto-approve
 
