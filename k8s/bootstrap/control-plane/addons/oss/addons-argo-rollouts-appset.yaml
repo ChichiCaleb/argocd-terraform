@@ -55,9 +55,9 @@ spec:
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/base/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
-            # values: |
-            #   dashboard:
-            #       enabled: true
+            values: |
+              dashboard:
+                  enabled: true
             #       service:
             #          type: ClusterIP
                 
