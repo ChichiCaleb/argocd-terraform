@@ -1,17 +1,1 @@
 # Helm chart values
- dashboard:
-    enabled: true
-  
-    ingress:
-      enabled: true
-      annotations:
-          alb.ingress.kubernetes.io/scheme: internet-facing
-          alb.ingress.kubernetes.io/target-type: ip
-          alb.ingress.kubernetes.io/backend-protocol: HTTPS
-          alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
-          alb.ingress.kubernetes.io/certificate-arn: "{{metadata.annotations.aws_certificate_arn}}"
-      ingressClassName: alb
-      hosts: 
-         - "argorollout.calebs.xyz"
-      tls:
-        - hosts: "argorollout.calebs.xyz"
