@@ -57,6 +57,16 @@ spec:
               - $values/{{.metadata.annotations.addons_repo_basepath}}environments/{{.metadata.labels.environment}}/addons/{{.values.addonChart}}/values.yaml
               - $values/{{.metadata.annotations.addons_repo_basepath}}clusters/{{.name}}/addons/{{.values.addonChart}}/values.yaml
             values: |
+              notifications:
+                  enabled: true
+                  argocdUrl: {{.metadata.annotations.argocd_hosts}}
+                  secret:
+                    create: true
+                    items: 
+                      slack-token: xoxb-1494779483671-6088931066881-fKSjTefxBAUvVgFiRgwmnTSz
+                  cm:
+                    create: true
+
               controller:
                 serviceAccount:
                   annotations:

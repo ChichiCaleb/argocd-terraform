@@ -3,6 +3,13 @@ kind: ApplicationSet
 metadata:
   name: guestbook
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.slack: alerts
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: alerts
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: alerts
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
 spec:
   syncPolicy:
     preserveResourcesOnDeletion: false

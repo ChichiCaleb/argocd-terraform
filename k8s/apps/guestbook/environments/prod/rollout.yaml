@@ -1,0 +1,59 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: alb-rollout
+  annotations:
+    notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: alert
+    notifications.argoproj.io/subscribe.on-rollout-completed: alert
+    notifications.argoproj.io/subscribe.on-rollout-updated: alert
+    notifications.argoproj.io/subscribe.on-scaling-replica-set: alert
+spec:
+  replicas: 2
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: alb-rollout
+  template:
+    metadata:
+      labels:
+        app: alb-rollout
+    spec:
+      containers:
+        - name: alb-rollout
+          image: argoproj/rollouts-demo:blue
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 5m
+  strategy:
+    canary:
+      canaryService: alb-rollout-canary
+      stableService: alb-rollout-stable
+      analysis:
+        templateName: success-rate
+        args:
+        - name: ingress
+          value: guestbook-ui
+      trafficRouting:
+        alb:
+          ingress: guestbook-ui
+          rootService: alb-rollout-root
+          servicePort: 80
+      steps:
+        - setWeight: 10
+        - pause: {}
+        - setWeight: 40
+        - pause:
+           duration: 10
+        - setWeight: 60
+        - pause:
+           duration: 10
+        - setWeight: 80
+        - pause:
+           duration: 10
+      

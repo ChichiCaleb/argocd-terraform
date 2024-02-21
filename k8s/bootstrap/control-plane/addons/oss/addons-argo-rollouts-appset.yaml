@@ -55,38 +55,15 @@ spec:
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/base/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
+           
             values: |
-              dashboard:
-                  enabled: true
-            #       service:
-            #          type: ClusterIP
-                
-            #       ingress:
-            #         enabled: true
-            #         annotations:
-            #             alb.ingress.kubernetes.io/scheme: "internet-facing"
-            #             alb.ingress.kubernetes.io/target-type: "ip"
-            #             alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
-            #             alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
-            #             external-dns.alpha.kubernetes.io/hostname = "rollout.calebs.xyz"
-            #             alb.ingress.kubernetes.io/certificate-arn: "{{metadata.annotations.aws_certificate_arn}}"
-            #         ingressClassName: "alb"
-            #         hosts: 
-            #           - "rollout.calebs.xyz"
-                      
-            #         tls:
-            #           - hosts: 
-            #               - "rollout.calebs.xyz"
-
-            #         extraPaths:
-            #           - path: /*
-            #             pathType: Prefix
-            #             backend:
-            #               service
-            #                 name: argo-rollouts-dashboard
-            #                 port:
-            #                   name: 3100
-      
+              notifications:
+                 secret:
+                   create: true
+                   items: 
+                      slack-token: xoxb-1494779483671-6088931066881-fKSjTefxBAUvVgFiRgwmnTSz
+         
+   
       
       destination:
         namespace: '{{values.addonChart}}'
@@ -96,3 +73,6 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true  # Big CRDs.
+
+
+

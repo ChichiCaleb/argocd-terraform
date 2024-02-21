@@ -5,7 +5,6 @@ metadata:
 resources:
 - deployment.yaml
 - namespace.yaml
-- service.yaml
 - ingress.yaml
 configMapGenerator:
 - behavior: create

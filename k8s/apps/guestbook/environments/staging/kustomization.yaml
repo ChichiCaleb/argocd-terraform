@@ -9,21 +9,9 @@ images:
     # newTag: v0.1.0
 resources:
 - ../../base
+- service.yaml
 
 patches:
-- target:
-    kind: Service
-    name: guestbook-ui
-  patch: |-
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: guestbook-ui
-    spec:
-     ports: 
-      - port: 8001
-        targetPort: 80
-
 - target:
     kind: Ingress
     name: guestbook-ui
@@ -44,7 +32,7 @@ patches:
                 pathType: Prefix
                 backend:
                   service:
-                    name: guestbook-ui
+                    name: guestbook-ui-staging
                     port: 
                       number: 8001
 
