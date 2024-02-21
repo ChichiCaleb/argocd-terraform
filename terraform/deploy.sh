@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+set -uo pipefail
+
 if [[ $# -eq 0 ]] ; then
     echo "No arguments supplied"
     echo "Usage: deploy.sh <environment>"
@@ -9,7 +12,7 @@ fi
 env=$1
 echo "Deploying $env with "workspaces/${env}.tfvars" ..."
 
-set -uo pipefail
+
 set -x
 
 terraform workspace new $env

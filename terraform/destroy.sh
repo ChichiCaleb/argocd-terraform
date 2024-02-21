@@ -27,6 +27,11 @@ kubectl patch ns argocd \
   --type json \
   --patch='[ { "op": "remove", "path": "/spec/finalizers" } ]' 
 
+
+kubectl patch -n argocd applicationset/guestbook \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+
 kubectl delete ing -n $env guestbook-ui
 
 fi

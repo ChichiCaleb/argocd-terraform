@@ -61,7 +61,7 @@ variable "addons" {
     enable_argo_events                     = false
     enable_argo_workflows                  = false
     enable_cluster_proportional_autoscaler = false
-    enable_kube_prometheus_stack           = false
+    enable_kube_prometheus_stack           = true
     enable_metrics_server                  = true
     enable_kyverno                         = true
     enable_prometheus_adapter              = false
