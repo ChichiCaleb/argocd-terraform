@@ -63,10 +63,10 @@ spec:
                 secret:
                   create: true
                   items: 
-                     slack-token: "xoxb-2102653184551-6664458500886-wktDzkO8B2V1Ej2GiFVK2BsH"
+                     slack-token: "xoxb-2102653184551-6668390614983-t25pXavGjllzQMVSQ9KKBRON"
                 notifiers: 
                   service.slack: |
-                     token: "xoxb-2102653184551-6664458500886-wktDzkO8B2V1Ej2GiFVK2BsH"
+                     token: $slack-token
                 cm:
                   create: true
 
