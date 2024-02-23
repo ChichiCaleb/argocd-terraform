@@ -31,3 +31,20 @@ output "access_argocd" {
     echo "Base URL: https://$(kubectl get ing -n staging guestbook-ui -o jsonpath='{.spec.rules[0].host}')"
     EOT
 }
+
+output "db_instance_address" {
+  description = "The address of the RDS instance"
+  value       = module.db.db_instance_address
+}
+
+output "db_instance_endpoint" {
+  description = "The connection endpoint"
+  value       = module.db.db_instance_endpoint
+}
+
+
+
+
+
+
+

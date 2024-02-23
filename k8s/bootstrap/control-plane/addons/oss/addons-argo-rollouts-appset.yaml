@@ -56,12 +56,7 @@ spec:
               - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
               - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
            
-            values: |
-              notifications:
-                 secret:
-                   create: true
-                   items: 
-                      slack-token: xoxb-2102653184551-6664458500886-wktDzkO8B2V1Ej2GiFVK2BsH
+           
          
    
       

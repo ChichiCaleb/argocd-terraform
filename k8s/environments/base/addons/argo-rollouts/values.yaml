@@ -1,0 +1,82 @@
+# apiVersionOverrides:
+  
+#   ingress: "networking.k8s.io/v1" 
+
+# controller:
+#  metrics:
+    
+#     enabled: true
+#     serviceMonitor:
+     
+#       enabled: true
+
+# dashboard:
+
+#   enabled: true
+
+#   # readonly: true
+
+#   service:
+ 
+#     type: NodePort
+
+#   ingress:
+   
+#     enabled: true
+#     # -- Dashboard ingress annotations
+#     annotations: 
+#       alb.ingress.kubernetes.io/scheme: "internet-facing"
+#       alb.ingress.kubernetes.io/target-type: "instance"
+#       alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
+#       alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
+#       alb.ingress.kubernetes.io/certificate-arn: "{{metadata.annotations.aws_certificate_arn}}"
+   
+#     ingressClassName: "alb"
+
+#     hosts: 
+#       - argorollouts.calebs.xyz
+
+    
+#     extraPaths: 
+#       - path: /*
+#         pathType: ImplementationSpecific
+#         backend:
+#           service:
+#             name: alb-rollout-root
+#             port:
+#               name: use-annotation
+
+    
+#     tls: 
+#     -  hosts:
+#         - argorollouts.calebs.xyz
+
+# notifications:
+#   secret:
+   
+#     create: true
+    
+#     items: 
+#        slack-token:  
+
+ 
+#   notifiers: 
+#     service.slack: |
+#       token: $slack-token
+
+  
+#   templates: 
+#     template.my-purple-template: |
+#       message: |
+#         Rollout {{.rollout.metadata.name}} has purple image
+#       slack:
+#           attachments: |
+#               [{
+#                 "title": "{{ .rollout.metadata.name}}",
+#                 "color": "#800080"
+#               }]
+
+#   triggers: 
+#     trigger.on-purple: |
+#       - send: [my-purple-template]
+#         when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'

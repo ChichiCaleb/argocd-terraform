@@ -27,17 +27,22 @@ kubectl patch ns argocd \
   --type json \
   --patch='[ { "op": "remove", "path": "/spec/finalizers" } ]' 
 
+kubectl delete ing -n $env guestbook-ui
+
 
 kubectl patch -n argocd applicationset/guestbook \
   --type json \
   --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 
-kubectl delete ing -n $env guestbook-ui
+wait 60s
 
+kubectl patch -n argocd applicationset/guestbook \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+  
 fi
+terraform destroy -auto-approve 
 
-export GODEBUG=asyncpreemptoff=1
-export TF_REGISTRY_CLIENT_TIMEOUT=20000
 
-terraform destroy -auto-approve
+
 

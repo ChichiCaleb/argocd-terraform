@@ -1,0 +1,80 @@
+[?1049h[22;0;0t[>4;2m[?1h=[?2004h[?1004h[1;30r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?25l[30;1H"/tmp/kubectl-edit-1230908595.yaml" 29L, 996B[1;1H[34m# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#[m
+[36mapiVersion[m[35m:[m v1
+[36mdata[m[35m:[m
+  [36mcontext[m[35m:[m |
+    [36margocdUrl[m[35m:[m [31m"https://argocd.calebs.xyz"[m
+  [36mservice.slack[m[35m:[m |
+    [36mtoken[m[35m:[m $slack-token
+[36mkind[m[35m:[m ConfigMap
+[36mmetadata[m[35m:[m
+  [36mannotations[m[35m:[m
+    [36mmeta.helm.sh/release-name[m[35m:[m argo-cd
+    [36mmeta.helm.sh/release-namespace[m[35m:[m argocd
+  [36mcreationTimestamp[m[35m:[m [31m"2024-02-23T19:19:39Z"[m
+  [36mlabels[m[35m:[m
+    [36mapp.kubernetes.io/component[m[35m:[m notifications-controller
+    [36mapp.kubernetes.io/instance[m[35m:[m argo-cd
+    [36mapp.kubernetes.io/managed-by[m[35m:[m Helm
+    [36mapp.kubernetes.io/name[m[35m:[m argocd-notifications-controller
+    [36mapp.kubernetes.io/part-of[m[35m:[m argocd
+    [36mapp.kubernetes.io/version[m[35m:[m v2.8.4
+    [36margocd.argoproj.io/instance[m[35m:[m addon-in-cluster-aws-argo-cd
+    [36mhelm.sh/chart[m[35m:[m argo-cd-5.46.7
+  [36mname[m[35m:[m argocd-notifications-cm
+  [36mnamespace[m[35m:[m argocd
+  [36mresourceVersion[m[35m:[m [31m"3987"[m
+  [36muid[m[35m:[m 12fb671b-be5a-4320-a9e0-20da3d3362fc[30;122H1,1[11CAll[1;1H[?25h[27m[23m[29m[m[H[2J[?25l[1;1H[34m# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#[m
+[36mapiVersion[m[35m:[m v1
+[36mdata[m[35m:[m[7;122H1,1[11CTop[1;1H[?25h[27m[23m[29m[m[H[2J[?25l[1;1H[34m# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#[m[5;122H1,1[11CTop[1;1H[?25h[27m[23m[29m[m[H[2J[?25l[1;1H[34m# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#[m
+[36mapiVersion[m[35m:[m v1
+[36mdata[m[35m:[m
+  [36mcontext[m[35m:[m |
+    [36margocdUrl[m[35m:[m [31m"https://argocd.calebs.xyz"[m
+  [36mservice.slack[m[35m:[m |
+    [36mtoken[m[35m:[m $slack-token
+[36mkind[m[35m:[m ConfigMap
+[36mmetadata[m[35m:[m
+  [36mannotations[m[35m:[m
+    [36mmeta.helm.sh/release-name[m[35m:[m argo-cd
+    [36mmeta.helm.sh/release-namespace[m[35m:[m argocd
+  [36mcreationTimestamp[m[35m:[m [31m"2024-02-23T19:19:39Z"[m
+  [36mlabels[m[35m:[m
+    [36mapp.kubernetes.io/component[m[35m:[m notifications-controller
+    [36mapp.kubernetes.io/instance[m[35m:[m argo-cd
+    [36mapp.kubernetes.io/managed-by[m[35m:[m Helm
+    [36mapp.kubernetes.io/name[m[35m:[m argocd-notifications-controller[22;122H1,1[11CTop[1;1H[?25h[27m[23m[29m[m[H[2J[?25l[1;1H[34m# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#[m
+[36mapiVersion[m[35m:[m v1
+[36mdata[m[35m:[m
+  [36mcontext[m[35m:[m |
+    [36margocdUrl[m[35m:[m [31m"https://argocd.calebs.xyz"[m
+  [36mservice.slack[m[35m:[m |
+    [36mtoken[m[35m:[m $slack-token
+[36mkind[m[35m:[m ConfigMap
+[36mmetadata[m[35m:[m
+  [36mannotations[m[35m:[m
+    [36mmeta.helm.sh/release-name[m[35m:[m argo-cd
+    [36mmeta.helm.sh/release-namespace[m[35m:[m argocd
+  [36mcreationTimestamp[m[35m:[m [31m"2024-02-23T19:19:39Z"[m
+  [36mlabels[m[35m:[m
+    [36mapp.kubernetes.io/component[m[35m:[m notifications-controller
+    [36mapp.kubernetes.io/instance[m[35m:[m argo-cd
+    [36mapp.kubernetes.io/managed-by[m[35m:[m Helm
+    [36mapp.kubernetes.io/name[m[35m:[m argocd-notifications-controller
+    [36mapp.kubernetes.io/part-of[m[35m:[m argocd[23;122H1,1[11CTop[1;1H[?25h[?25l[23;1HType  :qa  and press <Enter> to exit Vim[23;122H[K[23;122H1,1[11CTop[1;1H[?25h[?25l[23;122H[K[23;122H1,1[11CTop[1;1H[?25h[?25l[23;122H[K[23;122H1,1[11CTop[1;1H[?25h[?25l[23;122H[K[23;122H1,1[11CTop[1;1H[?25h[?25l[23;122H[K[23;122H1,1[11CTop[1;1H[?25h[?25l[23;122H[K[23;122H1,1[11CTop[1;1H[?25h[23;1H[?2004l[>4;m[?1004l[?2004l[?1l>[>4;m[?1049l[23;0;0tVim: Error reading input, exiting...
+[?25hVim: Finished.
+[23;1H[23;2t[23;1t
