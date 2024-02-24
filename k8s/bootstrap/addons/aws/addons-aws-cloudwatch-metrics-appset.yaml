@@ -18,7 +18,9 @@ spec:
                 addonChartRepository: https://aws.github.io/eks-charts
               selector:
                 matchExpressions:
-                  
+                  - key: akuity.io/argo-cd-cluster-name
+                    operator: NotIn
+                    values: [in-cluster]
                   - key: enable_aws_cloudwatch_metrics
                     operator: In
                     values: ['true']
@@ -50,8 +52,14 @@ spec:
             releaseName: '{{values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}.yaml
+              - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}/values.yaml
              
+            values: |
+              clusterName: {{metadata.annotations.aws_cluster_name}}
+              serviceAccount:
+                name: {{metadata.annotations.aws_cloudwatch_metrics_service_account}}
+                annotations:
+                  eks.amazonaws.com/role-arn: {{metadata.annotations.aws_cloudwatch_metrics_iam_role_arn}}
       destination:
         namespace: '{{metadata.annotations.aws_cloudwatch_metrics_namespace}}'
         name: '{{name}}'

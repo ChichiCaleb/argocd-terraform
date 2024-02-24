@@ -21,7 +21,7 @@ resource "argocd_application" "bootstrap_addons" {
       target_revision = var.addons.target_revision
       directory {
         recurse = true
-        exclude = "{charts/*,values/*}"
+        
       }
     }
     sync_policy {

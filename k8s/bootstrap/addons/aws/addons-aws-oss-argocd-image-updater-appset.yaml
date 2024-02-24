@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: argocd
+  name: addons-aws-argocd-image-updater
 spec:
   goTemplate: true
   syncPolicy:
@@ -19,8 +19,10 @@ spec:
                 addonChartRepository: https://argoproj.github.io/argo-helm
               selector:
                 matchExpressions:
-                 
-                  - key: enable_argocd_image_updater
+                  - key: akuity.io/argo-cd-cluster-name
+                    operator: NotIn
+                    values: [in-cluster]
+                  - key: enable_aws_argocd
                     operator: In
                     values: ['true']
           - clusters:
@@ -51,8 +53,8 @@ spec:
             releaseName: '{{.values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-             - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}.yaml
-            
+              - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}/values.yaml
+             
       destination:
         namespace: '{{default "argocd" .metadata.annotations.argocd_namespace}}'
         name: '{{.name}}'

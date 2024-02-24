@@ -18,7 +18,9 @@ spec:
                 addonChartRepository: https://kyverno.github.io/kyverno
               selector:
                 matchExpressions:
-                 
+                  - key: akuity.io/argo-cd-cluster-name
+                    operator: NotIn
+                    values: [in-cluster]
                   - key: enable_kyverno
                     operator: In
                     values: ['true']
@@ -51,7 +53,13 @@ spec:
             ignoreMissingValueFiles: true
             valueFiles:
               - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}/resources/values.yaml
-         
+ 
+          # values:
+          # fileParameters:
+          #  - name:
+          #    path:
+          # parameters
+          # valuesObject
       destination:
         namespace: '{{values.addonChart}}'
         name: '{{name}}'

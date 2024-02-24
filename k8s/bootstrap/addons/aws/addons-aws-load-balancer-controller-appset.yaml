@@ -14,11 +14,13 @@ spec:
               values:
                 addonChart: aws-load-balancer-controller
                 # anything not staging or prod use this version
-                addonChartVersion: 1.6.2
+                addonChartVersion: 2.7.1
                 addonChartRepository: https://aws.github.io/eks-charts
               selector:
                 matchExpressions:
-                  
+                  - key: akuity.io/argo-cd-cluster-name
+                    operator: NotIn
+                    values: [in-cluster]
                   - key: enable_aws_load_balancer_controller
                     operator: In
                     values: ['true']
@@ -27,13 +29,13 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 1.6.2
+                addonChartVersion: 2.7.1
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 1.6.2
+                addonChartVersion: 2.7.1
   template:
     metadata:
       name: addon-{{name}}-{{values.addonChart}}
@@ -50,9 +52,16 @@ spec:
             releaseName: '{{values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-             - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}.yaml
-            
-             
+              - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}/values.yaml
+
+            values: |
+              region: '{{metadata.annotations.aws_region}}'
+              vpcId: '{{metadata.annotations.aws_vpc_id}}'
+              clusterName: {{metadata.annotations.aws_cluster_name}}
+              serviceAccount:
+                name: {{metadata.annotations.aws_load_balancer_controller_service_account}}
+                annotations:
+                  eks.amazonaws.com/role-arn: {{metadata.annotations.aws_load_balancer_controller_iam_role_arn}}
       destination:
         namespace: '{{metadata.annotations.aws_load_balancer_controller_namespace}}'
         name: '{{name}}'

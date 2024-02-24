@@ -18,7 +18,9 @@ spec:
                 addonChartRepository: https://charts.fairwinds.com/stable
               selector:
                 matchExpressions:
-                 
+                  - key: akuity.io/argo-cd-cluster-name
+                    operator: NotIn
+                    values: [in-cluster]
                   - key: enable_vpa
                     operator: In
                     values: ['true']
@@ -50,8 +52,11 @@ spec:
             releaseName: '{{values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-             - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}.yaml
-           
+              - $values/{{metadata.annotations.addons_repo_basepath}}bootstrap/addons/values/{{values.addonChart}}/values.yaml
+
+            values: |
+              admissionController:
+                enabled: true
       destination:
         namespace: '{{values.addonChart}}'
         name: '{{name}}'
