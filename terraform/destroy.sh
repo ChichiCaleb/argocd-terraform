@@ -31,7 +31,7 @@ kubectl patch ns argocd \
   kubectl delete -n argocd applicationset/guestbook &
   kubectl patch -n argocd applicationset/guestbook --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' &
 )
-wait
+# wait
 
 kubectl delete ing -n $env guestbook-ui
 

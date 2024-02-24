@@ -1,0 +1,6 @@
+vpcId: '{{metadata.annotations.aws_vpc_id}}'
+clusterName: "{{metadata.annotations.aws_cluster_name}}"
+serviceAccount:
+  name: "{{metadata.annotations.aws_load_balancer_controller_service_account}}"
+  annotations:
+    eks.amazonaws.com/role-arn: "{{metadata.annotations.aws_load_balancer_controller_iam_role_arn}}"

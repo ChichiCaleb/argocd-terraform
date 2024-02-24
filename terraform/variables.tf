@@ -94,7 +94,7 @@ variable "gitops_addons_basepath" {
 variable "gitops_addons_path" {
   description = "Git repository path for addons"
   type        = string
-  default     = "bootstrap/control-plane/addons"
+  default     = "bootstrap/addons"
 }
 # Workloads Git
 variable "gitops_workload_org" {
