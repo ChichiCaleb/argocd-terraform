@@ -123,8 +123,4 @@ variable "gitops_workload_path" {
   default     = "apps"
 }
 
-variable "enable_gitops_auto_bootstrap" {
-  description = "Automatically deploy addons"
-  type        = bool
-  default     = true
-}
+

@@ -109,26 +109,6 @@ module "gitops_bridge_bootstrap" {
   depends_on = [module.eks_blueprints_addons, kubernetes_namespace.argocd, kubernetes_secret.git_secrets]
 }
 
-################################################################################
-# GitOps Bridge: Bootstrap for Apps
-################################################################################
-module "argocd" {
-  source = "./modules/argocd-bootstrap"
-
-  count = var.enable_gitops_auto_bootstrap ? 1 : 0
-
-  addons = {
-    repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
-    path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
-    target_revision = var.gitops_addons_revision
-  }
-  workloads = {
-    repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
-    path            = "${var.gitops_workload_basepath}bootstrap/workloads"
-    target_revision = var.gitops_addons_revision
-  }
-  depends_on = [module.gitops_bridge_bootstrap]
-}
 
 
 ################################################################################

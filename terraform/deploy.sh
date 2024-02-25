@@ -38,7 +38,8 @@ certificate_arn=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type
 
 echo CERTIFICATE_ARN=$certificate_arn > ../k8s/apps/guestbook/base/environment-properties.env
 
-kubectl apply -k  ../k8s/apps/guestbook/environments/$env 
+kubectl apply -f  ../k8s/bootstrap/addons/addons.yaml
+kubectl apply -f  ../k8s/bootstrap/workloads/guestbook-$env 
 
 fi
 
