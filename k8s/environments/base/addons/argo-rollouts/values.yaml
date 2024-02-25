@@ -1,0 +1,32 @@
+apiVersionOverrides:
+  ingress: "networking.k8s.io/v1" 
+controller:
+ metrics:
+    enabled: true
+    
+dashboard:
+  enabled: true
+ 
+ 
+notifications:
+  secret:
+    create: true
+    items: 
+       slack-token:  "eG94Yi0yMTAyNjUzMTg0NTUxLTY2ODAxNTU3NTI0MjEtM2VHb010RUlKbjBvaXFhejUwMXNVZEgz"
+  notifiers: 
+    service.slack: |
+      token: $slack-token
+  templates: 
+    template.my-purple-template: |
+      message: |
+        Rollout {{.rollout.metadata.name}} has purple image
+      slack:
+          attachments: |
+              [{
+                "title": "{{ .rollout.metadata.name}}",
+                "color": "#800080"
+              }]
+  triggers: 
+    trigger.on-purple: |
+      - send: [my-purple-template]
+        when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'

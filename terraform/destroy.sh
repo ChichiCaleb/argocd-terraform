@@ -29,7 +29,9 @@ kubectl patch ns argocd \
 
 
   
-kubectl patch -n argocd applicationset/guestbook --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' 
+kubectl patch -n argocd applicationset/guestbook \
+  --type json \
+  --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' 
 
 
 
@@ -37,7 +39,3 @@ kubectl delete ing -n $env guestbook-ui
 
 fi
 terraform destroy -auto-approve 
-
-
-
-

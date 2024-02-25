@@ -4,6 +4,7 @@ variable "domain_name" {
   default     = "calebs.xyz"
 }
 
+
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
   type        = bool
@@ -69,7 +70,6 @@ variable "addons" {
     enable_vpa                             = false
   }
 }
-
 # Addons Git
 variable "gitops_addons_org" {
   description = "Git repository org/user contains for addons"
@@ -94,7 +94,7 @@ variable "gitops_addons_basepath" {
 variable "gitops_addons_path" {
   description = "Git repository path for addons"
   type        = string
-  default     = "bootstrap/addons/aws"
+  default     = "bootstrap/control-plane/addons"
 }
 # Workloads Git
 variable "gitops_workload_org" {

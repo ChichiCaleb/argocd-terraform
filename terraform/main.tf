@@ -13,6 +13,7 @@ module "eks_blueprints_addons" {
   # Using GitOps Bridge (Skip Helm Install in Terraform)
   create_kubernetes_resources = false
 
+
   # EKS Blueprints Addons
   enable_cert_manager                 = var.addons.enable_cert_manager
   enable_aws_efs_csi_driver           = var.addons.enable_aws_efs_csi_driver
@@ -25,17 +26,13 @@ module "eks_blueprints_addons" {
   enable_karpenter                    = var.addons.enable_karpenter
   enable_velero                       = var.addons.enable_velero
 
-  
-
-  
-  external_dns_route53_zone_arns = [local.route53_zone_arn] # ArgoCD Server and UI domain name is registered in 
+  external_dns_route53_zone_arns = [local.route53_zone_arn] 
   tags = local.tags
+
   depends_on = [module.eks]
 }
 
 locals {
-
-  
   is_route53_private_zone = false
   domain_name      = var.domain_name
   argocd_subdomain = "argocd"
@@ -50,7 +47,7 @@ locals {
       aws_account_id   = data.aws_caller_identity.current.account_id
       aws_vpc_id       = module.vpc.vpc_id
     },
-      {
+     {
       argocd_hosts                = "[${local.argocd_host}]"
       external_dns_domain_filters = "[${local.domain_name}]"
       aws_certificate_arn         = aws_acm_certificate_validation.this.certificate_arn
@@ -83,14 +80,14 @@ locals {
 # GitOps Bridge: Bootstrap for In-Cluster
 ################################################################################
 module "gitops_bridge_bootstrap" {
-  source = "gitops-bridge-dev/gitops-bridge/helm"
+   source = "gitops-bridge-dev/gitops-bridge/helm"
 
   cluster = {
-   metadata = local.cluster_metadata
+    metadata = local.cluster_metadata
     addons   = local.cluster_labels
     environment  = local.environment
   }
-  
+  #apps       = local.argocd_apps
   argocd = {
     create_namespace = false
     set = [
@@ -108,7 +105,6 @@ module "gitops_bridge_bootstrap" {
   }
   depends_on = [module.eks_blueprints_addons, kubernetes_namespace.argocd, kubernetes_secret.git_secrets]
 }
-
 
 
 ################################################################################
@@ -157,10 +153,4 @@ resource "aws_acm_certificate_validation" "this" {
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
-
-
-
-
-
-
 

@@ -28,7 +28,12 @@ terraform {
     }
   }
 
-
+  # ##  Used for end-to-end testing on project; update to suit your needs
+  # backend "s3" {
+  #   bucket = "terraform-ssp-github-actions-state"
+  #   region = "us-west-2"
+  #   key    = "e2e/ipv4-prefix-delegation/terraform.tfstate"
+  # }
 }
 
 provider "argocd" {
@@ -51,7 +56,7 @@ provider "argocd" {
 data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "available" {}
 locals {
-  name = "${terraform.workspace}-eks"
+ name = "${terraform.workspace}-eks"
   environment = terraform.workspace
   region = var.region
   tags = {
@@ -64,7 +69,7 @@ provider "aws" {
 }
 
 provider "helm" {
-kubernetes {
+  kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 
