@@ -3,7 +3,11 @@ variable "domain_name" {
   type        = string
   default     = "calebs.xyz"
 }
-
+variable "secret_creds" {
+  description = "aws secret manager secrets"
+  type        = string
+  default     = "creds"
+}
 
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
@@ -50,23 +54,15 @@ variable "addons" {
     enable_cluster_autoscaler                    = false
     enable_external_dns                          = true
     enable_velero                                = false
-    enable_aws_secrets_store_csi_driver_provider = false
-    #  AWS Controllers for Kubernetes (ACK)
-    enable_ack_dynamodb                          = false
-    enable_ack_s3                                = false
-    enable_ack_rds                               = false
-    enable_ack_prometheusservice                 = false
-    enable_ack_eventbridge                       = false
+    
+   
     # oss
     enable_argo_rollouts                   = true
-    enable_argo_events                     = false
-    enable_argo_workflows                  = false
     enable_cluster_proportional_autoscaler = false
     enable_kube_prometheus_stack           = true
     enable_metrics_server                  = true
     enable_kyverno                         = true
     enable_prometheus_adapter              = false
-    enable_secrets_store_csi_driver        = false
     enable_vpa                             = false
   }
 }

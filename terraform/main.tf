@@ -51,6 +51,7 @@ locals {
       argocd_hosts                = "[${local.argocd_host}]"
       external_dns_domain_filters = "[${local.domain_name}]"
       aws_certificate_arn         = aws_acm_certificate_validation.this.certificate_arn
+      workload_sm_secret          = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)
      
     },
     {
@@ -74,6 +75,10 @@ locals {
     { aws_cluster_name = module.eks.cluster_name }
   )
 
+}
+
+data "aws_secretsmanager_secret_version" "creds" {
+  secret_id = var.secret_creds
 }
 
 ################################################################################
@@ -106,7 +111,26 @@ module "gitops_bridge_bootstrap" {
   depends_on = [module.eks_blueprints_addons, kubernetes_namespace.argocd, kubernetes_secret.git_secrets]
 }
 
+################################################################################
+# GitOps Bridge: Bootstrap for Apps
+################################################################################
+module "argocd" {
+  source = "./modules/argocd-bootstrap"
 
+  # count = var.enable_gitops_auto_bootstrap ? 1 : 0
+
+  addons = {
+    repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
+    path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
+    target_revision = var.gitops_addons_revision
+  }
+  workloads = {
+    repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
+    path            = "${var.gitops_workload_basepath}bootstrap/workloads"
+    target_revision = var.gitops_addons_revision
+  }
+  depends_on = [module.gitops_bridge_bootstrap]
+}
 ################################################################################
 # Route 53
 ################################################################################

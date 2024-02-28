@@ -226,7 +226,7 @@ notifications:
   secret:
     create: true
     items: 
-      slack-token: "eG94Yi0yMTAyNjUzMTg0NTUxLTY2ODAxNTU3NTI0MjEtM2VHb010RUlKbjBvaXFhejUwMXNVZEgz"
+      slack-token: "{{.metadata.annotations.workload_sm_secret[slackToken]}}"
   metrics:
     enabled: true
     
