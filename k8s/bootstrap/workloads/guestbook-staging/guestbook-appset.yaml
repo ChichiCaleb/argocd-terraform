@@ -40,21 +40,21 @@ spec:
             patch: |-
               - op: replace
                 path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
-                value: {{metadata.annotations.aws_certificate_arn}}
+                value: "{{metadata.annotations.aws_certificate_arn}}"
           - target:
               kind: ClusterSecretStore
               name: cluster-secretstore-sm
             patch: |-
               - op: replace
                 path: /spec/provider/aws/region
-                value: {{metadata.annotations.aws_region}}
+                value: "{{metadata.annotations.aws_region}}"
           - target:
               kind: ExternalSecret
               name: external-secrets-sm
             patch: |-
               - op: replace
                 path: /spec/dataFrom/0/extract/key
-                value: {{metadata.annotations.workload_sm_secret}}
+                value: "{{metadata.annotations.workload_sm_secret}}"
       destination:
         namespace: guestbook
         name: '{{name}}'

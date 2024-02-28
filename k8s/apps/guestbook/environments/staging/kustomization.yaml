@@ -54,7 +54,7 @@ patches:
       value: guestbook-ui-staging
 
     - op: replace
-      path: /spec/rules/0/http/paths/0/backend/service/port
+      path: /spec/rules/0/http/paths/0/backend/service/port/number
       value: 8002
 
 
