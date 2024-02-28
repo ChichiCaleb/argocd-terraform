@@ -54,6 +54,7 @@ variable "addons" {
     enable_cluster_autoscaler                    = false
     enable_external_dns                          = true
     enable_velero                                = false
+    enable_sealed_secrets                        = false
     
    
     # oss

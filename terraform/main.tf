@@ -51,7 +51,8 @@ locals {
       argocd_hosts                = "[${local.argocd_host}]"
       external_dns_domain_filters = "[${local.domain_name}]"
       aws_certificate_arn         = aws_acm_certificate_validation.this.certificate_arn
-      workload_sm_secret          = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)
+      slack_token         = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)[slackToken]
+      workload_sm_secret          = var.secret_creds
      
     },
     {
