@@ -19,7 +19,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: gcr.io/heptio-images/ks-guestbook-demo:0.
+      value: gcr.io/heptio-images/ks-guestbook-demo:0.2
       
     - op: replace
       path: /spec/replicas
