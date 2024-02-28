@@ -35,19 +35,19 @@ metadata:
 spec:
   ingressClassName: alb
 
-  # tls:
-  # - hosts:
-  #   - calebs.xyz
+  tls:
+  - hosts:
+    - calebs.xyz
 
-  # rules:
-  #   - host: calebs.xyz
-  #     http:
-  #       paths:
-  #         - path: /
-  #           pathType: Prefix
-  #           backend:
-  #             service:
-  #               name: guestbook-ui
-  #               port: 
-  #                 number: 80
+  rules:
+    - host: calebs.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: guestbook-ui
+                port: 
+                  number: 80
    

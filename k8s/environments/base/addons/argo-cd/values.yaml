@@ -221,12 +221,12 @@ extraObjects:
           server: '*'
           
 notifications:
-  enabled: true
-  argocdUrl: "https://argocd.calebs.xyz"
-  secret:
-    create: true
-    items: 
-      slack-token: "{{.metadata.annotations.slack_token}}"
+  # enabled: true
+  # argocdUrl: "https://argocd.calebs.xyz"
+  # secret:
+  #   create: true
+  #   items: 
+  #     slack-token: "{{.metadata.annotations.slack_token}}"
   metrics:
     enabled: true
     

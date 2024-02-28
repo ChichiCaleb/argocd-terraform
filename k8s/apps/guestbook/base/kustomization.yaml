@@ -6,6 +6,8 @@ resources:
 - deployment.yaml
 - namespace.yaml
 - ingress.yaml
+- secrets.yaml
+- service.yaml
 
 # configMapGenerator:
 # - behavior: create

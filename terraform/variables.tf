@@ -47,9 +47,9 @@ variable "addons" {
     enable_aws_cloudwatch_metrics       = false
     enable_external_secrets             = true
     enable_aws_load_balancer_controller = true
-    enable_aws_for_fluentbit            = true
+    enable_aws_for_fluentbit            = false
     enable_karpenter                    = false
-    enable_aws_ingress_nginx            = true # inginx configured with AWS NLB
+    enable_aws_ingress_nginx            = false # inginx configured with AWS NLB
     enable_aws_efs_csi_driver                    = false
     enable_cluster_autoscaler                    = false
     enable_external_dns                          = true
