@@ -32,29 +32,29 @@ spec:
         repoURL: '{{metadata.annotations.workload_repo_url}}'
         path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/staging'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
-        kustomize:
-          patches:
-          - target:
-              kind: Ingress
-              name: guestbook-ui 
-            patch: |-
-              - op: replace
-                path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
-                value: "{{metadata.annotations.aws_certificate_arn}}"
-          - target:
-              kind: ClusterSecretStore
-              name: cluster-secretstore-sm
-            patch: |-
-              - op: replace
-                path: /spec/provider/aws/region
-                value: "{{metadata.annotations.aws_region}}"
-          - target:
-              kind: ExternalSecret
-              name: external-secrets-sm
-            patch: |-
-              - op: replace
-                path: /spec/dataFrom/0/extract/key
-                value: "{{metadata.annotations.workload_sm_secret}}"
+        # kustomize:
+        #   patches:
+        #   - target:
+        #       kind: Ingress
+        #       name: guestbook-ui 
+        #     patch: |-
+        #       - op: replace
+        #         path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
+        #         value: "{{metadata.annotations.aws_certificate_arn}}"
+        #   - target:
+        #       kind: ClusterSecretStore
+        #       name: cluster-secretstore-sm
+        #     patch: |-
+        #       - op: replace
+        #         path: /spec/provider/aws/region
+        #         value: "{{metadata.annotations.aws_region}}"
+        #   - target:
+        #       kind: ExternalSecret
+        #       name: external-secrets-sm
+        #     patch: |-
+        #       - op: replace
+        #         path: /spec/dataFrom/0/extract/key
+        #         value: "{{metadata.annotations.workload_sm_secret}}"
       destination:
         namespace: guestbook
         name: '{{name}}'
