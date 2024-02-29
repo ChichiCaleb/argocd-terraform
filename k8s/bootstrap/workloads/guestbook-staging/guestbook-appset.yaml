@@ -39,7 +39,7 @@ spec:
               name: guestbook-ui 
             patch: |-
               - op: replace
-                path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
+                path: /metadata/annotations/alb.ingress.kubernetes.io/certificate-arn
                 value: "arn:aws:acm:us-west-2:499653711972:certificate/e334081e-67af-4dd4-a8cb-0ab37021c201"
           - target:
               kind: ClusterSecretStore
