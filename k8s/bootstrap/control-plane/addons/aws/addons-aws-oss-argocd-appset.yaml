@@ -56,9 +56,7 @@ spec:
               - $values/{{.metadata.annotations.addons_repo_basepath}}environments/base/addons/{{.values.addonChart}}/values.yaml
 
             values: |
-              global:
-                image:
-                  tag: "v2.10.1"
+              
               notifications:
                 enabled: true
                 argocdUrl: "{{.metadata.annotations.argocd_hosts}}"
