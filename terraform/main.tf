@@ -129,11 +129,11 @@ module "argocd" {
     path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
     target_revision = var.gitops_addons_revision
   }
-  # workloads = {
-  #   repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
-  #   path            = "${var.gitops_workload_basepath}bootstrap/workloads"
-  #   target_revision = var.gitops_addons_revision
-  # }
+  workloads = {
+    repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
+    path            = "${var.gitops_workload_basepath}bootstrap/workloads"
+    target_revision = var.gitops_addons_revision
+  }
   depends_on = [module.gitops_bridge_bootstrap]
 }
 ################################################################################
