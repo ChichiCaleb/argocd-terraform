@@ -38,9 +38,10 @@ certificate_arn=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type
 secret_identifier=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type=cluster -o json | jq -r '.items[0].metadata.annotations.workload_sm_secret')
 region=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type=cluster -o json | jq -r '.items[0].metadata.annotations.aws_region')
 
-echo CERTIFICATE_ARN=$certificate_arn > ../k8s/apps/guestbook/base/environment-properties.env
-echo SECRET_IDENTIFIER=$secret_identifier > ../k8s/apps/guestbook/base/environment-properties.env
-echo REGION=$region > ../k8s/apps/guestbook/base/environment-properties.env
+echo "CERTIFICATE_ARN=$certificate_arn" > ../k8s/apps/guestbook/base/environment-properties.env
+echo "SECRET_IDENTIFIER=$secret_identifier" >> ../k8s/apps/guestbook/base/environment-properties.env
+echo "REGION=$region" >> ../k8s/apps/guestbook/base/environment-properties.env
+
 
 kubectl apply -k  ../k8s/apps/guestbook/environments/$env
 
