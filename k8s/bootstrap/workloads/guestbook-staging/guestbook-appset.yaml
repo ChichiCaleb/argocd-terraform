@@ -10,9 +10,6 @@ metadata:
     notifications.argoproj.io/subscribe.on-deployed.slack: alerts
     notifications.argoproj.io/subscribe.on-sync-failed.slack: alerts
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: alerts
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-
 spec:
   syncPolicy:
     preserveResourcesOnDeletion: true
@@ -34,33 +31,7 @@ spec:
         repoURL: '{{metadata.annotations.workload_repo_url}}'
         path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/staging'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
-        
-        # kustomize:
-        #   namespace: staging
-        #   resources:
-        #   - ../../base
-        #   patches:
-        #   - target:
-        #       kind: Ingress
-        #       name: guestbook-ui 
-        #     patch: |-
-        #       - op: replace
-        #         path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
-        #         value: "arn:aws:acm:us-west-2:499653711972:certificate/e334081e-67af-4dd4-a8cb-0ab37021c201"
-        #   - target:
-        #       kind: ClusterSecretStore
-        #       name: cluster-secretstore-sm
-        #     patch: |-
-        #       - op: replace
-        #         path: /spec/provider/aws/region
-        #         value: "us-west-2"
-        #   - target:
-        #       kind: ExternalSecret
-        #       name: external-secrets-sm
-        #     patch: |-
-        #       - op: replace
-        #         path: /spec/dataFrom/0/extract/key
-        #         value: "creds"
+       
       destination:
         namespace: staging
         name: '{{name}}'

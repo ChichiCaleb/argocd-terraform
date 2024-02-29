@@ -1,16 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: staging
-# replicas:
-# - count: 1
-#   name: guestbook-ui
-# images:
-# - name: gcr.io/heptio-images/ks-guestbook-demo:0.2
-#     # newTag: v0.1.0
 resources:
 - ../../base
-# - service.yaml
-
 
 patches:
 - target:
@@ -60,29 +52,6 @@ patches:
 
 
 
-# patches:
-# - target:
-#     kind: Ingress
-#     name: guestbook-ui
-#   patch: |-
-#     apiVersion: networking.k8s.io/v1
-#     kind: Ingress
-#     metadata:
-#       name: guestbook-ui
-#     spec:
-#       tls:
-#       - hosts:
-#         - staging.calebs.xyz
-#       rules:
-#         - host: staging.calebs.xyz
-#           http:
-#             paths:
-#               - path: /
-#                 pathType: Prefix
-#                 backend:
-#                   service:
-#                     name: guestbook-ui-staging
-#                     port: 
-#                       number: 8001
+
 
 
