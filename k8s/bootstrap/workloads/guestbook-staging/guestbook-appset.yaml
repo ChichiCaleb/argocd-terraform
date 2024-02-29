@@ -33,8 +33,6 @@ spec:
         path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/staging'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
         kustomize:
-          resources:
-          - ../../base
           patches:
           - target:
               kind: Ingress
