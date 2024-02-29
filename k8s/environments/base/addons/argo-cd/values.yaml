@@ -57,19 +57,19 @@ server:
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 
 configs:
-  # cmp:
-  #   create: true
-  #   plugins:
-  #     name: kustomized-helm
-  #     generate:
-  #       command: ["/bin/sh", "-c"]
-  #       args: 
-  #         - |
-  #          IMAGETAG=${ARGOCD_ENV_IMAGETAG} \
-  #          CERTIFICATE_ARN=arn:unknown
-  #          SECRET_IDENTIFIER=unknown
-  #          REGION=unknown
-  #          kustomize build --enable-helm"\
+  cmp:
+    create: true
+    plugins:
+      name: kustomized-helm
+      generate:
+        command: ["/bin/sh", "-c"]
+        args: 
+          - |
+           
+           CERTIFICATE_ARN="{{.metadata.annotations.aws_certificate_arn}}" \
+           SECRET_IDENTIFIER="{{.metadata.annotations.workload_sm_secret}}"\
+           REGION="{{.metadata.annotations.aws_region}}"\
+           kustomize build --enable-helm"\
 
   repositories:
     # Required when using helm repository with oci formal like karpenter and aws-gateway-api-controller
