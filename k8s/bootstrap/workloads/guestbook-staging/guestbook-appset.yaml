@@ -2,7 +2,73 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: guestbook
+  name: guestbook-base
+  namespace: argocd
+  
+
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: akuity.io/argo-cd-cluster-name
+              operator: NotIn
+              values: [in-cluster]
+  template:
+    metadata:
+      name: guestbook
+      labels:
+        workload: 'true'
+    spec:
+      project: default
+      source:
+        repoURL: '{{metadata.annotations.workload_repo_url}}'
+        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/base'
+        targetRevision: '{{metadata.annotations.workload_repo_revision}}'
+        kustomize:
+          patches:
+          - target:
+              kind: Ingress
+              name: guestbook-ui 
+            patch: |-
+              - op: replace
+                path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
+                value: "arn:aws:acm:us-west-2:499653711972:certificate/e334081e-67af-4dd4-a8cb-0ab37021c201"
+          - target:
+              kind: ClusterSecretStore
+              name: cluster-secretstore-sm
+            patch: |-
+              - op: replace
+                path: /spec/provider/aws/region
+                value: "us-west-2"
+          - target:
+              kind: ExternalSecret
+              name: external-secrets-sm
+            patch: |-
+              - op: replace
+                path: /spec/dataFrom/0/extract/key
+                value: "creds"
+      destination:
+        namespace: guestbook
+        name: '{{name}}'
+      syncPolicy:
+        automated: {}
+        retry:
+          backoff:
+            duration: 1m
+          limit: 20
+        syncOptions:
+          - CreateNamespace=true
+
+
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook-staging
   namespace: argocd
   annotations:
     notifications.argoproj.io/subscribe.on-deployed.slack: alerts
@@ -32,29 +98,29 @@ spec:
         repoURL: '{{metadata.annotations.workload_repo_url}}'
         path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/staging'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
-        kustomize:
-          patches:
-          # - target:
-          #     kind: Ingress
-          #     name: guestbook-ui 
-          #   patch: |-
-          #     - op: replace
-          #       path: metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
-          #       value: "arn:aws:acm:us-west-2:499653711972:certificate/e334081e-67af-4dd4-a8cb-0ab37021c201"
-          - target:
-              kind: ClusterSecretStore
-              name: cluster-secretstore-sm
-            patch: |-
-              - op: replace
-                path: spec/provider/aws/region
-                value: "us-west-2"
-          - target:
-              kind: ExternalSecret
-              name: external-secrets-sm
-            patch: |-
-              - op: replace
-                path: spec/dataFrom/0/extract/key
-                value: "creds"
+        # kustomize:
+        #   patches:
+        #   - target:
+        #       kind: Ingress
+        #       name: guestbook-ui 
+        #     patch: |-
+        #       - op: replace
+        #         path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
+        #         value: "arn:aws:acm:us-west-2:499653711972:certificate/e334081e-67af-4dd4-a8cb-0ab37021c201"
+        #   - target:
+        #       kind: ClusterSecretStore
+        #       name: cluster-secretstore-sm
+        #     patch: |-
+        #       - op: replace
+        #         path: /spec/provider/aws/region
+        #         value: "us-west-2"
+        #   - target:
+        #       kind: ExternalSecret
+        #       name: external-secrets-sm
+        #     patch: |-
+        #       - op: replace
+        #         path: /spec/dataFrom/0/extract/key
+        #         value: "creds"
       destination:
         namespace: guestbook
         name: '{{name}}'
