@@ -1,7 +1,7 @@
-varReference:
-  - kind: Ingress
-    path: metadata/annotations
-  - kind: ClusterSecretStore
-    path: spec/provider/aws
-  - kind: ExternalSecret
-    path: spec/dataFrom/0/extract
+# varReference:
+#   - kind: Ingress
+#     path: metadata/annotations
+#   - kind: ClusterSecretStore
+#     path: spec/provider/aws
+#   - kind: ExternalSecret
+#     path: spec/dataFrom/0/extract
