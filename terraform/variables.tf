@@ -58,6 +58,8 @@ variable "addons" {
     
    
     # oss
+    enable_grafana                         = false
+    enable_grafana_loki                    = false
     enable_argo_rollouts                   = true
     enable_cluster_proportional_autoscaler = false
     enable_kube_prometheus_stack           = true

@@ -9,32 +9,42 @@ resources:
 - analysis-success-rate.yaml
 
 
-
 patches:
-- patch: |-
-    $patch: delete
-    apiVersion: apps/v1
+- target:
     kind: Deployment
-    metadata:
-      name: guestbook-ui
+    name: guestbook-ui
+  patch: |-
+    - op: delete
+      path: /metadata/name
+      
+- target:
+    kind: Service
+    name: guestbook-ui
+  patch: |-
+    - op: delete
+      path: /metadata/name
 
-- patch: |-
-    apiVersion: networking.k8s.io/v1
+- target:
     kind: Ingress
-    metadata:
-      name: guestbook-ui
-    spec:
-      tls:
-      - hosts:
-        - calebs.xyz
-      rules:
-        - host: calebs.xyz
-          http:
-            paths:
-              - path: /*
-                pathType: ImplementationSpecific
-                backend:
-                  service:
-                    name: alb-rollout-root
-                    port: 
-                      number: use-annotation
+    name: guestbook-ui 
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: guestbook-ui-prod
+
+    - op: replace
+      path: /spec/rules/0/http/paths/0/path
+      value: /*
+
+    - op: replace
+      path: /spec/rules/0/http/paths/0/pathType
+      value: ImplementationSpecific
+    
+    - op: replace
+      path: /spec/rules/0/http/paths/0/backend/service/name
+      value: alb-rollout-root
+
+    - op: replace
+      path: /spec/rules/0/http/paths/0/backend/service/port/number
+      value: use-annotation
+

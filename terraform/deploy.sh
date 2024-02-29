@@ -43,7 +43,8 @@ echo "SECRET_IDENTIFIER=$secret_identifier" >> ../k8s/apps/guestbook/base/enviro
 echo "REGION=$region" >> ../k8s/apps/guestbook/base/environment-properties.env
 
 
-kubectl apply -k  ../k8s/apps/guestbook/environments/$env
+# kubectl apply -k  ../k8s/apps/guestbook/environments/$env
+kubectl apply -f  ../k8s/bootstrap/workloads/guestbook-$env
 
 fi
 
