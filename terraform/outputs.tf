@@ -30,7 +30,7 @@ output "access_argocd" {
     echo "ArgoCD Username: admin"
     echo "ArgoCD Password: $(aws secretsmanager get-secret-value --secret-id argocd-${terraform.workspace} --region ${local.region} --output json | jq -r .SecretString)"
     echo "ArgoCD URL: https://$(kubectl get ing -n argocd argo-cd-argocd-server -o jsonpath='{.spec.tls[0].hosts[0]}')"
-    echo "Base URL: https://$(kubectl get ing -n staging guestbook-ui -o jsonpath='{.spec.rules[0].host}')"
+    echo "Base URL: https://$(kubectl get ing -n ${terraform.workspace} guestbook-ui -o jsonpath='{.spec.rules[0].host}')"
     EOT
 }
 
