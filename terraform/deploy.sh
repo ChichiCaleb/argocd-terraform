@@ -22,7 +22,7 @@ export TF_REGISTRY_CLIENT_TIMEOUT=20000
 terraform init -reconfigure 
 terraform apply -var-file="workspaces/${env}.tfvars" -auto-approve
 
-set +x
+# set +x
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
