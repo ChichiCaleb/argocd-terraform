@@ -15,7 +15,7 @@ spec:
                 addonChart: argo-rollouts
                 # anything not staging or prod use this version
                 addonChartVersion: 2.32.0
-                addonChartRepositoryNamespace: argocd
+                
                 addonChartRepository: https://argoproj.github.io/argo-helm
               selector:
                 matchExpressions:
@@ -61,7 +61,7 @@ spec:
                   items: 
                     slack-token:  "{{metadata.annotations.slack_token}}"
       destination:
-        namespace: '{{values.addonChartRepositoryNamespace}}'
+        namespace: '{{values.addonChart}}'
         name: '{{name}}'
       syncPolicy:
         automated: {}
