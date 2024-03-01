@@ -9,10 +9,10 @@ dashboard:
  
  
 notifications:
-  secret:
-    create: true
-    items: 
-       slack-token:  "{{metadata.annotations.slack_token}}"
+  # secret:
+  #   create: true
+  #   items: 
+  #      slack-token:  "{{metadata.annotations.slack_token}}"
   notifiers: 
     service.slack: |
       token: $slack-token
