@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: alb-rollout
-          image: argoproj/rollouts-demo:blue
+          image: gcr.io/heptio-images/ks-guestbook-demo:0.2
           ports:
             - name: http
               containerPort: 80
@@ -34,9 +34,9 @@ spec:
     canary:
       canaryService: alb-rollout-canary
       stableService: alb-rollout-stable
-      analysis:
-        templates:
-        - templateName: success-rate
+      # analysis:
+      #   templates:
+      #   - templateName: success-rate
       # args:
       # - name: ingress
       #   value: guestbook-ui
@@ -44,7 +44,7 @@ spec:
         alb:
           ingress: guestbook-ui
           rootService: alb-rollout-root
-          servicePort: 80
+          servicePort: 8000
       steps:
         - setWeight: 10
         - pause: {}
