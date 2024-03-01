@@ -29,10 +29,6 @@ patches:
     name: guestbook-ui 
   patch: |-
     - op: replace
-      path: /metadata/name
-      value: guestbook-ui-prod
-
-    - op: replace
       path: /spec/rules/0/http/paths/0/path
       value: /*
 

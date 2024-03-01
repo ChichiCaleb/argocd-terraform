@@ -34,10 +34,6 @@ patches:
     name: guestbook-ui 
   patch: |-
     - op: replace
-      path: /metadata/name
-      value: guestbook-ui-staging
-
-    - op: replace
       path: /spec/tls/0/hosts/0
       value: staging.calebs.xyz
  
