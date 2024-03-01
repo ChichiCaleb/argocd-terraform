@@ -36,7 +36,7 @@ locals {
   is_route53_private_zone = false
   domain_name      = var.domain_name
   argocd_subdomain = "argocd"
-  argocd_host      = "${local.argocd_subdomain}.${local.domain_name}"
+  argocd_host      = "${local.argocd_subdomain}-${terraform.workspace}.${local.domain_name}"
   route53_zone_arn = try(data.aws_route53_zone.this.arn, "")
 
   cluster_metadata = merge(
