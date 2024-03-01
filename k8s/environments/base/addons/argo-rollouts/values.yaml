@@ -16,17 +16,7 @@ notifications:
   notifiers: 
     service.slack: |
       token: $slack-token
-  templates: 
-    template.my-purple-template: |
-      message: |
-        Rollout {{.rollout.metadata.name}} has purple image
-      slack:
-          attachments: |
-              [{
-                "title": "{{ .rollout.metadata.name}}",
-                "color": "#800080"
-              }]
-  triggers: 
-    trigger.on-purple: |
-      - send: [my-purple-template]
-        when: rollout.spec.template.spec.containers[0].image == 'argoproj/rollouts-demo:purple'
+  
+  # defaultTriggers: |
+  #   - on-rollout-completed
+  #   - on-rollout-step-completed

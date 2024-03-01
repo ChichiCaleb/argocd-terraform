@@ -35,10 +35,11 @@ spec:
       canaryService: alb-rollout-canary
       stableService: alb-rollout-stable
       analysis:
-        templateName: success-rate
-        args:
-        - name: ingress
-          value: guestbook-ui
+        templates:
+        - templateName: success-rate
+      # args:
+      # - name: ingress
+      #   value: guestbook-ui
       trafficRouting:
         alb:
           ingress: guestbook-ui
@@ -47,6 +48,12 @@ spec:
       steps:
         - setWeight: 10
         - pause: {}
+        # - analysis:
+        #     templates:
+        #     - templateName: success-rate
+        #     args:
+        #     - name: ingress
+        #       value: guestbook-ui
         - setWeight: 40
         - pause:
            duration: 10

@@ -1,8 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: guestbook
+  name: guestbook-preview
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.slack: alerts
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: alerts
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: alerts
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   syncPolicy:
     preserveResourcesOnDeletion: false
@@ -25,7 +31,7 @@ spec:
         path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/guestbook/environments/preview'
         targetRevision: '{{metadata.annotations.workload_repo_revision}}'
       destination:
-        namespace: guestbook
+        namespace: preview
         name: '{{name}}'
       syncPolicy:
         automated: {}
