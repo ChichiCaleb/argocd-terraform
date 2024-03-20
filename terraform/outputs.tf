@@ -30,16 +30,39 @@ output "access_argocd" {
     echo "ArgoCD Username: admin"
     echo "ArgoCD Password: $(aws secretsmanager get-secret-value --secret-id argocd-${terraform.workspace} --region ${local.region} --output json | jq -r .SecretString)"
     echo "ArgoCD URL: https://$(kubectl get ing -n argocd argo-cd-argocd-server -o jsonpath='{.spec.tls[0].hosts[0]}')"
-    echo "Base URL: https://$(kubectl get ing -n ${terraform.workspace} guestbook-ui  -o jsonpath='{.spec.rules[0].host}')"
+       
+        if [ "${terraform.workspace}" = "staging" ]; then
+    # Loop through all Ingress resources in the specified namespace
+    for ing_name in $(kubectl get ing -n "staging" | awk '/^staging-/{print $1}'); do
+      
+        echo "$ing_name URL: https://$(kubectl get ing -n staging "$ing_name"  -o jsonpath='{.spec.rules[0].host}')"
+    done
+
+    for namespace in $(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}'); do
+        # Check if the namespace starts with "preview"
+        if [[ "$namespace" == preview* ]]; then
+            # Loop through all Ingress resources in the current namespace
+            for ing_name in $(kubectl get ing -n "$namespace" | awk '/^preview-/{print $1}'); do
+              echo "$namespace URL: https://$(kubectl get ing -n "$namespace" "$ing_name"  -o jsonpath='{.spec.rules[0].host}')"
+            done
+        fi
+    done
+
+    elif [ "${terraform.workspace}" = "prod" ]; then
+    # Loop through all Ingress resources in the specified namespace
+    for ing_name in $(kubectl get ing -n "prod" | awk '/^prod-/{print $1}'); do
+      
+        echo "$ing_name URL: https://$(kubectl get ing -n prod "$ing_name"  -o jsonpath='{.spec.rules[0].host}')"
+    done
+
+    else
+        echo "Unknown cluster: $cluster"
+        exit 1
+    fi
+        
+    
     EOT
 }
 
-# output "db_instance_address" {
-#   description = "The address of the RDS instance"
-#   value       = module.db.db_instance_address
-# }
 
-# output "db_instance_endpoint" {
-#   description = "The connection endpoint"
-#   value       = module.db.db_instance_endpoint
-# }
+

@@ -29,7 +29,7 @@ module "eks_blueprints_addons" {
   external_dns_route53_zone_arns = [local.route53_zone_arn] 
   tags = local.tags
 
-  depends_on = [module.eks]
+  depends_on = [module.eks,module.db]
 }
 
 locals {
@@ -48,11 +48,22 @@ locals {
       aws_vpc_id       = module.vpc.vpc_id
     },
      {
-      argocd_hosts                = "[${local.argocd_host}]"
+      
+      argocd_host                 = local.argocd_host
       external_dns_domain_filters = "[${local.domain_name}]"
       aws_certificate_arn         = aws_acm_certificate_validation.this.certificate_arn
-      slack_token         = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).slackToken
+      slack_token                 = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).SLACK_TOKEN
       workload_sm_secret          = var.secret_creds
+      db_instance_address         = module.db.db_instance_address
+      slack_channel               = var.slack_channel
+      preview_image_list          =var.preview_image_list
+      staging_image_list          =var.staging_image_list
+      git_repo                    =var.git_repo
+      git_owner                   = var.git_owner
+      kube_cost_host              ="kubecost-${terraform.workspace}.${local.domain_name}"
+      grafana_host                ="grafana-${terraform.workspace}.${local.domain_name}"
+      prometheus_host             ="prometheus-${terraform.workspace}.${local.domain_name}"
+      
      
     },
     {
@@ -117,23 +128,41 @@ module "gitops_bridge_bootstrap" {
 }
 
 ################################################################################
-# GitOps Bridge: Bootstrap for Apps
+# GitOps Bridge: Bootstrap for addons
 ################################################################################
-module "argocd" {
-  source = "./modules/argocd-bootstrap"
+resource "argocd_application" "bootstrap_addons" {
 
-  # count = var.enable_gitops_auto_bootstrap ? 1 : 0
+  metadata {
+    name      = "bootstrap-addons"
+    namespace = "argocd"
+    labels = {
+      cluster = "in-cluster"
+    }
+  }
+  cascade = true
+  wait    = true
+  spec {
+    project = "default"
+    destination {
+      name      = "in-cluster"
+      namespace = "argocd"
+    }
+    source {
+      repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
+      path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
+      target_revision = var.gitops_addons_revision
+      directory {
+        recurse = true
+        }
+    }
+    sync_policy {
+      automated {
+        prune     = true
+        self_heal = true
+      }
+    }
+  }
 
-  addons = {
-    repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
-    path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
-    target_revision = var.gitops_addons_revision
-  }
-  workloads = {
-    repo_url        = "${var.gitops_workload_org}/${var.gitops_workload_repo}"
-    path            = "${var.gitops_workload_basepath}bootstrap/workloads"
-    target_revision = var.gitops_addons_revision
-  }
   depends_on = [module.gitops_bridge_bootstrap]
 }
 ################################################################################
@@ -195,7 +224,7 @@ module "db" {
   identifier = "${local.name}-postgresql"
 
 
-  engine               = "postgres"
+  engine               = var.db_engine
   engine_version       = "14"
   family               = "postgres14" 
   major_engine_version = "14"         
@@ -207,15 +236,16 @@ module "db" {
   # NOTE: Do NOT use 'user' as the value for 'username' as it throws:
   # "Error creating DB Instance: InvalidParameterValue: MasterUsername
   # user cannot be used as it is a reserved word used by the engine"
-  db_name  = "completePostgresql"
-  username = "complete_postgresql"
+  db_name  = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).POSTGRES_DB
+  username = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).POSTGRES_USER
+  password = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).POSTGRES_PASSWORD
   port     = 5432
 
   # setting manage_master_user_password_rotation to false after it
   # has been set to true previously disables automatic rotation
-  manage_master_user_password_rotation              = true
-  master_user_password_rotate_immediately           = false
-  master_user_password_rotation_schedule_expression = "rate(15 days)"
+  # manage_master_user_password_rotation              = true
+  # master_user_password_rotate_immediately           = false
+  # master_user_password_rotation_schedule_expression = "rate(15 days)"
 
   # multi_az               = true
   db_subnet_group_name   = module.vpc.database_subnet_group
@@ -223,8 +253,7 @@ module "db" {
 
   maintenance_window              = "Mon:00:00-Mon:03:00"
   backup_window                   = "03:00-06:00"
-#   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
-#   create_cloudwatch_log_group     = true
+
 
   backup_retention_period = 1
   skip_final_snapshot     = true
@@ -256,6 +285,7 @@ module "db" {
   db_parameter_group_tags = {
     "Sensitive" = "low"
   }
+  depends_on = [module.security_group]
 }
 
 
@@ -280,4 +310,18 @@ module "security_group" {
 
   tags = local.tags
 }
+
+module "terraform_state_backend" {
+  source = "cloudposse/tfstate-backend/aws"
+ 
+  version       = "1.4.0"
+  namespace     = "gitops"
+  stage         = "${terraform.workspace}"
+  name          = "app-backend"
+  attributes    = ["state"]
+  terraform_backend_config_file_path = "."
+  terraform_backend_config_file_name = "backend.tf"
+  force_destroy = false
+}
+
 

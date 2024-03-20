@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: prod
+resources:
+- ../../base
+- service.yaml
+- rollout.yaml
+- analysis-success-rate.yaml
+- karpenter-provisioner.yaml
+
+
+patches:
+- patch: |-
+    $patch: delete
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: apps-deployment
+    
+- patch: |-
+    $patch: delete
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: apps-service
+
+- path: patches/*.yaml
+
+
+

@@ -1,4 +1,4 @@
-Gitops with argocd and terraform
+Gitops developers platform
 
 
 Work in progress

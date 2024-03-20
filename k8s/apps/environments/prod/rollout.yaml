@@ -1,0 +1,80 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: alb-rollout
+  annotations:
+    notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: alerts
+    notifications.argoproj.io/subscribe.on-rollout-completed: alerts
+    notifications.argoproj.io/subscribe.on-rollout-updated: alerts
+    notifications.argoproj.io/subscribe.on-scaling-replica-set: alerts
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      apps: alb-rollout
+      run: proportional-autoscaler
+  template:
+    metadata:
+      labels:
+        apps: alb-rollout
+        run: proportional-autoscaler
+    spec:
+      containers:
+        - name: alb-rollout
+          image: IMAGE_PLACEHOLDER
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: external-secrets-sm
+            - configMapRef:
+                name: environment-variables
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10  
+          resources:
+            requests:
+              memory: 6Gi
+              cpu: 1
+  strategy:
+    canary:
+      canaryService: alb-rollout-canary
+      stableService: alb-rollout-stable
+      analysis:
+        templates:
+        - templateName: success-rate
+      args:
+      - name: ingress
+        value: apps-ingress
+      trafficRouting:
+        alb:
+          ingress: apps-ingress
+          rootService: alb-rollout-root
+          servicePort: 80
+      steps:
+        - setWeight: 10
+        - pause: {}
+        
+        - setWeight: 40
+        - pause:
+           duration: 10
+        - setWeight: 60
+        - pause:
+           duration: 10
+        - setWeight: 80
+        - pause:
+           duration: 10
+      

@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: arbitrary
+resources:
+- deployment.yaml
+- namespace.yaml
+- ingress.yaml
+- secrets.yaml
+- service.yaml
+- externalName-service.yaml
+- prom-service.yaml
+- kyverno-policies
+
+configMapGenerator:
+- behavior: create
+  envs:
+  - environment-properties.env
+  name: environment-variables

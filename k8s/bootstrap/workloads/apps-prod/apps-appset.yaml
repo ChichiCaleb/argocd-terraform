@@ -1,0 +1,60 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps-prod
+  namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.slack: "{{metadata.annotations.slack_channel}}"
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: "{{metadata.annotations.slack_channel}}"
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: "{{metadata.annotations.slack_channel}}"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          environment: prod
+        
+template:
+    metadata:
+      name:  "apps-prod"
+      labels:
+        workload: 'true'
+    spec:
+      project: default
+      destination:
+        namespace:  "prod"
+        name: '{{name}}'
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - CreateNamespace=true
+      source:
+        repoURL: '{{metadata.annotations.workload_repo_url}}'
+        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/environments/prod'
+        targetRevision: '{{metadata.annotations.workload_repo_revision}}'
+        kustomize:
+          patches:
+          - target:
+              kind: Ingress
+              name: apps-ingress 
+            patch: |-
+              - op: replace
+                path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
+                value: {{metadata.annotations.staging_aws_certificate_arn}} 
+
+          - target:
+              kind: Service
+              name: postgres
+            patch: |-
+              - op: replace
+                path: /spec/externalName
+                value: {{metadata.annotations.staging_db_instance_address}
+
+      
+
+          

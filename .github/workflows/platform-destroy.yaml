@@ -1,0 +1,33 @@
+name: "destroy gitops developer platform"
+on:
+  workflow_dispatch:
+    inputs:
+      terraform_workspace:
+        description: 'cluster to destroy specify either "staging or prod"'     
+        required: true
+
+jobs:
+  terraform:
+    name: Destroy terraform resources
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+      contents: read
+    
+
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+
+      - name: checkout terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v3
+
+      - name: configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
+        
+      - name: destroy platform 
+        run: "./destroy.sh ${{inputs.terraform_workspace}}"

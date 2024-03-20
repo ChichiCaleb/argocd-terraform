@@ -1,1 +1,87 @@
-# Helm chart values
+prometheus:
+  additionalServiceMonitors:
+    - name: myapp
+      additionalLabels:
+        prometheus: main
+      endpoints:
+      - path: /metrics
+        port: http-metrics
+      namespaceSelector:
+        matchNames:
+        - staging
+      selector:
+        matchLabels:
+          app: myapp-monitoring
+
+# Adding an ingress resource for Prometheus GUI
+  ingress:
+    enabled: true
+    annotations:
+      alb.ingress.kubernetes.io/scheme: "internet-facing"
+      alb.ingress.kubernetes.io/target-type: "ip"
+      alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
+      alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
+      alb.ingress.kubernetes.io/group.name: apps
+      alb.ingress.kubernetes.io/group.order: '2'
+    ingressClassName: "alb"
+    pathType: Prefix
+    paths:
+      - /
+    hosts:
+      - "{{metadata.annotations.prometheus_host}}"
+    tls:
+    - hosts: 
+        - "{{metadata.annotations.prometheus_host}}"
+    
+   
+  prometheusSpec:
+    serviceMonitorSelector:
+      matchLabels:
+        prometheus: main
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        monitoring: prometheus
+    # Configure Persistent Volume for Prometheus storage
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "gp3"
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
+alertmanager:
+  alertmanagerSpec:
+    podMetadata:
+       namespace: monitoring
+       name: main
+    logLevel: debug
+    resources:
+       requests:
+          cpu: 200m
+          memory: 256Mi
+       limits:
+          cpu: 200m
+          memory: 256Mi
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'slack-notifications'
+      routes:
+      - receiver: 'slack-notifications'
+        matchers:
+          - severity = "warning"
+    receivers:
+    - name: 'slack-notifications'
+      slack_configs:
+      - channel: "#alerts"
+        send_resolved: true
+        api_url: "https://hooks.slack.com/services/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"
+        text: "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"

@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apps-ingress
+
+  annotations:
+    # Load Balancer Name
+    alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
+    # Ingress Core Settings  
+    alb.ingress.kubernetes.io/scheme: internet-facing    
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP 
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    # health check annotations 
+    alb.ingress.kubernetes.io/healthcheck-path: /   
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/success-codes: '200'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    
+    alb.ingress.kubernetes.io/certificate-arn: CERTIFICATE_ARN_PLACEHOLDER
+    ## SSL Settings
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    # SSL Redirect Setting
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+  
+    # Target type: Ip (Defaults to Instance if not specified)
+    alb.ingress.kubernetes.io/target-type :  instance
+
+    # Ingress Groups
+    alb.ingress.kubernetes.io/group.name: apps
+    alb.ingress.kubernetes.io/group.order: '9999'
+spec:
+  ingressClassName: alb
+
+  tls:
+  - hosts:
+    - DOMAIN_PLACEHOLDER
+
+  rules:
+    - host: DOMAIN_PLACEHOLDER
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: apps-service
+                port:
+                 
+              
+   

@@ -1,0 +1,31 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: prevent-duplicate-deployment-ports
+spec:
+  validationFailureAction: enforce
+  rules:
+  - name: check-unique-ports
+    match:
+      resources:
+        kinds:
+        - Deployment
+    validate:
+      message: "Port numbers must be unique across deployments within the namespace."
+      pattern:
+        spec:
+          template:
+            spec:
+              containers:
+              - ports:
+                - containerPort: "{{request.object.spec.template.spec.containers[*].ports[*].containerPort}}"
+      anyOf:
+      - pattern:
+          - not:
+              # Checks if the current deployment has any duplicate port numbers with other deployments in the namespace
+              - eq:
+                  - "{{request.namespace}}"
+                  - "{{request.object.metadata.namespace}}"
+              - eq:
+                  - "{{request.object.spec.template.spec.containers[*].ports[*].containerPort}}"
+                  - "{{deployments.objects.metadata.namespace[request.namespace].spec.template.spec.containers[*].ports[*].containerPort | unique }}"

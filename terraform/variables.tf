@@ -3,12 +3,36 @@ variable "domain_name" {
   type        = string
   default     = "calebs.xyz"
 }
+variable "slack_channel" {
+  description = "slack channel for argo notifications"
+  type        = string
+  default     = "alerts"
+}
+variable "preview_image_list" {
+  description = "docker image for different environment"
+  type        = string
+  default     = "web=docker_image,api=docker_image_2"
+}
+variable "staging_image_list" {
+  description = "docker image for different environment"
+  type        = string
+  default     = "web=docker_image,api=docker_image_2"
+}
+variable "prod_image_list" {
+  description = "docker image for different environment"
+  type        = string
+  default     = "web=docker_image,api=docker_image_2"
+}
 variable "secret_creds" {
   description = "aws secret manager secrets"
   type        = string
   default     = "creds"
 }
-
+variable "db_engine" {
+  description = "choose db engine"
+  type        = string
+  default     = "postgres"
+}
 variable "enable_git_ssh" {
   description = "Use git ssh to access all git repos using format git@github.com:<org>"
   type        = bool
@@ -38,47 +62,51 @@ variable "addons" {
   description = "Kubernetes addons"
   type        = any
   default = {
-    # aws
-     # Enable if want argo manage argo from gitops
-    enable_argocd                       = true
-    enable_argocd_image_updater         = true
-    enable_cert_manager                 = false
-    enable_aws_ebs_csi_resources        = true # generate gp2 and gp3 storage classes for ebs-csi
-    enable_aws_cloudwatch_metrics       = false
-    enable_external_secrets             = true
-    enable_aws_load_balancer_controller = true
-    enable_aws_for_fluentbit            = false
-    enable_karpenter                    = false
-    enable_aws_ingress_nginx            = false # inginx configured with AWS NLB
-    enable_aws_efs_csi_driver                    = false
-    enable_cluster_autoscaler                    = false
-    enable_external_dns                          = true
-    enable_velero                                = false
-    enable_sealed_secrets                        = false
     
-   
-    # oss
-    enable_grafana                         = false
-    enable_grafana_loki                    = false
+    enable_argocd                          = true
     enable_argo_rollouts                   = true
-    enable_cluster_proportional_autoscaler = false
+    enable_argocd_image_updater            = true
+    enable_aws_ebs_csi_resources           = true 
+    enable_external_secrets                = true
+    enable_aws_load_balancer_controller    = true
+    enable_karpenter                       = true
+    enable_external_dns                    = true
+    enable_grafana                         = true
+    enable_loki_stack                      = true
+    enable_cluster_proportional_autoscaler = true
     enable_kube_prometheus_stack           = true
-    enable_metrics_server                  = true
     enable_kyverno                         = true
-    enable_prometheus_adapter              = false
-    enable_vpa                             = false
+    enable_kubecost                        = true 
+   
   }
+}
+
+variable "git_repo" {
+  description = "name of Git repository"
+  type        = string
+  default     = "argocd-terraform"
+}
+variable "git_owner" {
+  description = "name of repository owner"
+  type        = string
+  default     = "ChichiCaleb"
+}
+variable "git_organization" {
+  description = "name of git organization"
+  type        = string
+  default     = "https://github.com/${var.git_owner}"
 }
 # Addons Git
 variable "gitops_addons_org" {
   description = "Git repository org/user contains for addons"
   type        = string
-  default     = "https://github.com/ChichiCaleb"
+  default     = var.git_organization
 }
+
 variable "gitops_addons_repo" {
   description = "Git repository contains for addons"
   type        = string
-  default     = "argocd-terraform"
+  default     = var.git_repo
 }
 variable "gitops_addons_revision" {
   description = "Git repository revision/branch/ref for addons"
@@ -99,12 +127,12 @@ variable "gitops_addons_path" {
 variable "gitops_workload_org" {
   description = "Git repository org/user contains for workload"
   type        = string
-  default     = "https://github.com/ChichiCaleb"
+  default     = var.git_organization
 }
 variable "gitops_workload_repo" {
   description = "Git repository contains for workload"
   type        = string
-  default     = "argocd-terraform"
+  default     = var.git_repo
 }
 variable "gitops_workload_revision" {
   description = "Git repository revision/branch/ref for workload"
