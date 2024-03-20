@@ -278,7 +278,7 @@ export_config_variable_to_kustomize
 
 update_ingress_group_order "$environment-$service"
 
-check_if_any_terraform_value_changed
+
 
 # reassign variables to be used by kustomize environment patching
 
@@ -299,122 +299,134 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
  # Generate the patch file dynamically for staging and preview environment
   cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
     
-    - target:
-        kind: Deployment
-        name: apps-deployment
-      patch: |-
-        - op: replace
-          path: /metadata/name
-          value: $SERVICE_SELECTOR
+- target:
+    kind: Deployment
+    name: apps-deployment
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /metadata/labels/apps
-          value: $SERVICE_SELECTOR
+    - op: replace
+      path: /metadata/labels/apps
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/selector/matchLabels/apps
-          value: $SERVICE_SELECTOR
+    - op: replace
+      path: /spec/selector/matchLabels/apps
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/template/metadata/labels/apps
-          value: $SERVICE_SELECTOR
-        
-        - op: replace
-          path: /spec/template/spec/containers/0/image
-          value: $IMAGE
+    - op: replace
+      path: /spec/template/metadata/labels/apps
+      value: $SERVICE_SELECTOR
+    
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: $IMAGE
 
-        - op: replace
-          path: /spec/replicas
-          value: $REPLICAS
+    - op: replace
+      path: /spec/replicas
+      value: $REPLICAS
 
-        - op: replace
-          path: /spec/template/spec/containers/0/ports/0/containerPort
-          value: $PORT
+    - op: replace
+      path: /spec/template/spec/containers/0/ports/0/containerPort
+      value: $PORT
 
-        - op: replace
-          path: /spec/template/spec/containers/0/livenessProbe/httpGet/port
-          value: $PORT
+    - op: replace
+      path: /spec/template/spec/containers/0/livenessProbe/httpGet/port
+      value: $PORT
 
-        - op: replace
-          path: /spec/template/spec/containers/0/readinessProbe/httpGet/port
-          value: $PORT
+    - op: replace
+      path: /spec/template/spec/containers/0/readinessProbe/httpGet/port
+      value: $PORT
 
-    - target:
-        kind: Service
-        name: apps-service
-      patch: |-
-        - op: replace
-          path: /metadata/name
-          value: $SERVICE_SELECTOR
+- target:
+    kind: Service
+    name: apps-service
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/selector/apps
-          value: $SERVICE_SELECTOR
+    - op: replace
+      path: /spec/selector/apps
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/ports/0/port
-          value: $PORT
+    - op: replace
+      path: /spec/ports/0/port
+      value: $PORT
 
-        - op: replace
-          path: /spec/ports/0/targetPort
-          value: $PORT
+    - op: replace
+      path: /spec/ports/0/targetPort
+      value: $PORT
 
-    - target:
-        kind: Service
-        name: apps-prom
-      patch: |-
-        - op: replace
-          path: /metadata/name
-          value: $SERVICE_SELECTOR
+- target:
+    kind: Service
+    name: apps-prom
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/selector/apps
-          value: $SERVICE_SELECTOR
+    - op: replace
+      path: /spec/selector/apps
+      value: $SERVICE_SELECTOR
 
-    - target:
-        kind: Ingress
-        name: apps-ingress
-      patch: |-
-        - op: replace
-          path: /metadata/name
-          value: $SERVICE_SELECTOR
+- target:
+    kind: ServiceMonitor
+    name: app-monitor
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/tls/0/hosts/0
-          value: $SUB_DOMAIN
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/rules/0/host
-          value: $SUB_DOMAIN
+- target:
+    kind: Ingress
+    name: apps-ingress
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR
 
-        - op: replace
-          path: /spec/rules/0/http/paths/0/backend/service/name
-          value: $SERVICE_SELECTOR
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: $SUB_DOMAIN
 
-        
-        - op: replace
-          path: /metadata/annotations/[alb.ingress.kubernetes.io/group.order]
-          value: $INGRESS_GROUP_ORDER
+    - op: replace
+      path: /spec/rules/0/host
+      value: $SUB_DOMAIN
 
-        - op: add
-          path: /spec/rules/0/http/paths/0/backend/service/port
-          value: number=$PORT
+    - op: replace
+      path: /spec/rules/0/http/paths/0/backend/service/name
+      value: $SERVICE_SELECTOR
 
-    - target:
-        kind: ExternalSecret
-        name: external-secrets-sm
-      patch: |-
-        - op: replace
-          path: /spec/dataFrom/0/extract/key
-          value: $SECRET_CREDS
+    
+    - op: replace
+      path: /metadata/annotations/[alb.ingress.kubernetes.io/group.order]
+      value: $INGRESS_GROUP_ORDER
 
-    - target:
-        kind: ClusterSecretStore
-        name: cluster-secretstore-sm
-      patch: |-
-        - op: replace
-          path: /spec/provider/aws/region
-          value: $REGION
+    - op: add
+      path: /spec/rules/0/http/paths/0/backend/service/port
+      value: number=$PORT
+
+- target:
+    kind: ExternalSecret
+    name: external-secrets-sm
+  patch: |-
+    - op: replace
+      path: /spec/dataFrom/0/extract/key
+      value: $SECRET_CREDS
+
+- target:
+    kind: ClusterSecretStore
+    name: cluster-secretstore-sm
+  patch: |-
+    - op: replace
+      path: /spec/provider/aws/region
+      value: $REGION
 EOF
 
 # Check if $ENVIRONMENT is prod
@@ -432,6 +444,18 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
 
     - op: replace
       path: /spec/selector/apps
+      value: $SERVICE_SELECTOR
+
+- target:
+    kind: ServiceMonitor
+    name: app-monitor
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR
+
+    - op: replace
+      path: /spec/selector/matchLabels/app
       value: $SERVICE_SELECTOR
 
 - target:
@@ -624,4 +648,4 @@ else
 fi
 
 
-
+check_if_any_terraform_value_changed

@@ -17,11 +17,12 @@ set -x
 
 terraform workspace new $env
 terraform workspace select $env
+export GODEBUG=asyncpreemptoff=1
 export TF_REGISTRY_CLIENT_TIMEOUT=20000
 terraform init -reconfigure 
 terraform apply -var-file="workspaces/${env}.tfvars" -auto-approve
-terraform init -force-copy
-fi
+# terraform init -force-copy
+
 
 
 

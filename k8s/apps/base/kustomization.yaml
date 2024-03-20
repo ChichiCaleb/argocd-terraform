@@ -10,7 +10,9 @@ resources:
 - service.yaml
 - externalName-service.yaml
 - prom-service.yaml
+- service-monitor.yaml
 - kyverno-policies
+
 
 configMapGenerator:
 - behavior: create

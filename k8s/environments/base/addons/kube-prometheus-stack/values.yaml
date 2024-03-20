@@ -1,18 +1,4 @@
 prometheus:
-  additionalServiceMonitors:
-    - name: myapp
-      additionalLabels:
-        prometheus: main
-      endpoints:
-      - path: /metrics
-        port: http-metrics
-      namespaceSelector:
-        matchNames:
-        - staging
-      selector:
-        matchLabels:
-          app: myapp-monitoring
-
 # Adding an ingress resource for Prometheus GUI
   ingress:
     enabled: true

@@ -2,3 +2,5 @@ metrics:
   enabled: true
   serviceMonitor:
     enabled: true
+    additionalLabels:
+        release: prometheus

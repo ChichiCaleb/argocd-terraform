@@ -5,6 +5,8 @@ controller:
     enabled: true
     serviceMonitor:
       enabled: true
+      additionalLabels:
+        release: prometheus
 dashboard:
   enabled: true
  

@@ -23,7 +23,7 @@ secret_creds: creds
 # Use git ssh to access all git repos using format git@github.com:<org>
 enable_git_ssh: false
 # AWS region to create kuberntes cluster
-region: us-west-2
+region: us-east-1
 # Git repository org/user
 git_owner: ChichiCaleb
 # Git repository name

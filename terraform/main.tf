@@ -311,17 +311,17 @@ module "security_group" {
   tags = local.tags
 }
 
-module "terraform_state_backend" {
-  source = "cloudposse/tfstate-backend/aws"
+# module "terraform_state_backend" {
+#   source = "cloudposse/tfstate-backend/aws"
  
-  version       = "1.4.0"
-  namespace     = "gitops"
-  stage         = "${terraform.workspace}"
-  name          = "app-backend"
-  attributes    = ["state"]
-  terraform_backend_config_file_path = "."
-  terraform_backend_config_file_name = "backend.tf"
-  force_destroy = false
-}
+#   version       = "1.4.0"
+#   namespace     = "gitops"
+#   stage         = "${terraform.workspace}"
+#   name          = "app-backend"
+#   attributes    = ["state"]
+#   terraform_backend_config_file_path = "."
+#   terraform_backend_config_file_name = "backend.tf"
+#   force_destroy = false
+# }
 
 
