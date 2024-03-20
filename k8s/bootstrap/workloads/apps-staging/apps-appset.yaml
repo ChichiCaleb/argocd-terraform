@@ -21,41 +21,41 @@ spec:
         matchLabels:
           environment: staging
         
-template:
-    metadata:
-      name:  "apps-staging"
-      labels:
-        workload: 'true'
-    spec:
-      project: default
-      destination:
-        namespace:  "staging"
-        name: '{{name}}'
-      syncPolicy:
-        automated: {}
-        syncOptions:
-          - CreateNamespace=true
-      source:
-        repoURL: '{{metadata.annotations.workload_repo_url}}'
-        path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/environments/staging'
-        targetRevision: '{{metadata.annotations.workload_repo_revision}}'
-        kustomize:
-          patches:
-          - target:
-              kind: Ingress
-              name: apps-ingress 
-            patch: |-
-              - op: replace
-                path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
-                value: {{metadata.annotations.staging_aws_certificate_arn}} 
+  template:
+      metadata:
+        name:  "apps-staging"
+        labels:
+          workload: 'true'
+      spec:
+        project: default
+        destination:
+          namespace:  "staging"
+          name: '{{name}}'
+        syncPolicy:
+          automated: {}
+          syncOptions:
+            - CreateNamespace=true
+        source:
+          repoURL: '{{metadata.annotations.workload_repo_url}}'
+          path: '{{metadata.annotations.workload_repo_basepath}}{{metadata.annotations.workload_repo_path}}/environments/staging'
+          targetRevision: '{{metadata.annotations.workload_repo_revision}}'
+          kustomize:
+            patches:
+            - target:
+                kind: Ingress
+                name: apps-ingress 
+              patch: |-
+                - op: replace
+                  path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
+                  value: {{metadata.annotations.staging_aws_certificate_arn}} 
 
-          - target:
-              kind: Service
-              name: postgres
-            patch: |-
-              - op: replace
-                path: /spec/externalName
-                value: {{metadata.annotations.staging_db_instance_address}
+            - target:
+                kind: Service
+                name: postgres
+              patch: |-
+                - op: replace
+                  path: /spec/externalName
+                  value: {{metadata.annotations.staging_db_instance_address}
 
       
 

@@ -57,7 +57,7 @@ update_ingress_group_order() {
     
 # Check if the combination exists in the file
     if grep -q "^$combination=" $ingress_group_order; then
-        echo "Combination already exists."
+        echo "ingress group combination already exists."
         INGRESS_GROUP_ORDER=$last_order
     else
        INGRESS_GROUP_ORDER=$((last_order - 10))
@@ -237,6 +237,7 @@ fi
              ./deploy.sh prod
               
             else
+            
                echo "Unknown environment: $ENVIRONMENT"
                  exit 1
              fi

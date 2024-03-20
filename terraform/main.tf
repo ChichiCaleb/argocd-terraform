@@ -15,16 +15,11 @@ module "eks_blueprints_addons" {
 
 
   # EKS Blueprints Addons
-  enable_cert_manager                 = var.addons.enable_cert_manager
-  enable_aws_efs_csi_driver           = var.addons.enable_aws_efs_csi_driver
-  enable_aws_cloudwatch_metrics       = var.addons.enable_aws_cloudwatch_metrics
-  enable_cluster_autoscaler           = var.addons.enable_cluster_autoscaler
   enable_external_dns                 = var.addons.enable_external_dns
   enable_external_secrets             = var.addons.enable_external_secrets
   enable_aws_load_balancer_controller = var.addons.enable_aws_load_balancer_controller
-  enable_aws_for_fluentbit            = var.addons.enable_aws_for_fluentbit
   enable_karpenter                    = var.addons.enable_karpenter
-  enable_velero                       = var.addons.enable_velero
+
 
   external_dns_route53_zone_arns = [local.route53_zone_arn] 
   tags = local.tags
@@ -127,44 +122,9 @@ module "gitops_bridge_bootstrap" {
   depends_on = [module.eks_blueprints_addons, kubernetes_namespace.argocd, kubernetes_secret.git_secrets]
 }
 
-################################################################################
-# GitOps Bridge: Bootstrap for addons
-################################################################################
-resource "argocd_application" "bootstrap_addons" {
 
-  metadata {
-    name      = "bootstrap-addons"
-    namespace = "argocd"
-    labels = {
-      cluster = "in-cluster"
-    }
-  }
-  cascade = true
-  wait    = true
-  spec {
-    project = "default"
-    destination {
-      name      = "in-cluster"
-      namespace = "argocd"
-    }
-    source {
-      repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
-      path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
-      target_revision = var.gitops_addons_revision
-      directory {
-        recurse = true
-        }
-    }
-    sync_policy {
-      automated {
-        prune     = true
-        self_heal = true
-      }
-    }
-  }
 
-  depends_on = [module.gitops_bridge_bootstrap]
-}
+
 ################################################################################
 # Route 53
 ################################################################################

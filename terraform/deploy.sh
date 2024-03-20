@@ -23,6 +23,25 @@ terraform init -reconfigure
 terraform apply -var-file="workspaces/${env}.tfvars" -auto-approve
 # terraform init -force-copy
 
+set +x
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOTDIR="$(cd ${SCRIPTDIR}/../..; pwd )"
+[[ -n "${DEBUG:-}" ]] 
+
+TMPFILE=$(mktemp)
+terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
+
+if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
+  source "$TMPFILE"
+
+
+kubectl apply -f  ../k8s/bootstrap/control-plane/addons/aws
+kubectl apply -f  ../k8s/bootstrap/workloads/apps-$env
+
+fi
+
+
 
 
 
