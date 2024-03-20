@@ -230,9 +230,12 @@ fi
             echo "applying terraform modules..."
             # Perform action here
             if [ "$environment" = "staging" ] || [ "$environment" = "preview" ]; then
-             ./terraform/deploy.sh staging
+              cd terraform 
+             ./deploy.sh staging
             elif [ "$environment" = "prod" ]; then
-              ./terraform/deploy.sh prod
+              cd terraform 
+             ./deploy.sh prod
+              
             else
                echo "Unknown environment: $ENVIRONMENT"
                  exit 1

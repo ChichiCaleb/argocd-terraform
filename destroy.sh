@@ -1,3 +1,5 @@
 #!/bin/bash
 
-./terraform/destroy.sh
+
+cd terraform
+./destroy.sh

@@ -94,19 +94,22 @@ variable "git_owner" {
 variable "git_organization" {
   description = "name of git organization"
   type        = string
-  default     = "https://github.com/${var.git_owner}"
+  default     = "https://github.com/ChichiCaleb"
+  # default     = "https://github.com/${var.git_owner}"
 }
 # Addons Git
 variable "gitops_addons_org" {
   description = "Git repository org/user contains for addons"
   type        = string
-  default     = var.git_organization
+  default     = "https://github.com/ChichiCaleb"
+  # default     = var.git_organization
 }
 
 variable "gitops_addons_repo" {
   description = "Git repository contains for addons"
   type        = string
-  default     = var.git_repo
+  default     = "argocd-terraform"
+  # default     = var.git_repo
 }
 variable "gitops_addons_revision" {
   description = "Git repository revision/branch/ref for addons"
@@ -127,12 +130,14 @@ variable "gitops_addons_path" {
 variable "gitops_workload_org" {
   description = "Git repository org/user contains for workload"
   type        = string
-  default     = var.git_organization
+  default     = "https://github.com/ChichiCaleb"
+  # default     = var.git_organization
 }
 variable "gitops_workload_repo" {
   description = "Git repository contains for workload"
   type        = string
-  default     = var.git_repo
+  default     = "argocd-terraform"
+  # default     = var.git_repo
 }
 variable "gitops_workload_revision" {
   description = "Git repository revision/branch/ref for workload"

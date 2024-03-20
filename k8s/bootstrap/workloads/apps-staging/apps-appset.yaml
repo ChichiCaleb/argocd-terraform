@@ -5,8 +5,8 @@ metadata:
   name: apps-staging
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: "{{metadata.annotations.staging_image_list}}"
-    argocd-image-updater.argoproj.io/write-back-method: git
+    # argocd-image-updater.argoproj.io/image-list: "{{metadata.annotations.staging_image_list}}"
+    # argocd-image-updater.argoproj.io/write-back-method: git
     notifications.argoproj.io/subscribe.on-deployed.slack: "{{metadata.annotations.slack_channel}}"
     notifications.argoproj.io/subscribe.on-sync-failed.slack: "{{metadata.annotations.slack_channel}}"
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: "{{metadata.annotations.slack_channel}}"

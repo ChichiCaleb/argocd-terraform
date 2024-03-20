@@ -7,10 +7,10 @@ service: web
 # specify subdomain specific to the specified environment
 sub_domain: staging.calebs.xyz
 # specify docker image  specific to the specified environment and service
-image: horizonclient/calkube:v3.7.15
+image: horizonclient/calkube:v3.7.16
 # specify docker images for all services in this environment,to be used by argocd image updater
 # in this format: web=image:0.0.1,api=image_2:0.0.1
-image_list: horizonclient/calkube:~v3.7
+image_list: horizonclient/calkube:v3.7.16
 # specify the number of deployment replicas for this particular environment and service
 # defaults to 1
 replicas: 1
