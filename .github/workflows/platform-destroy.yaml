@@ -30,4 +30,4 @@ jobs:
           aws-region: us-east-1
         
       - name: destroy platform 
-        run: "./destroy.sh ${{inputs.terraform_workspace}}"
+        run: "chmod +x ./destroy.sh ${{inputs.terraform_workspace}}"
