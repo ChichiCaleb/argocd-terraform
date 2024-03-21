@@ -222,6 +222,10 @@ fi
     echo "REPLICAS=\"$replicas\"" >> $values_file
     echo "PORT=\"$port\"" >> $values_file
  
+#  export this to be used by prometheus service monitor
+ export TF_VAR_service_monitor_name="$environment-$service-monitor"
+ export TF_VAR_service_monitor_namespace="$environment"
+ export TF_VAR_service_monitor_label_selector="$environment-$service-prom"
     
 
     # Perform action if any change detected
@@ -376,17 +380,7 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
       path: /spec/ports/0/port
       value: $INGRESS_GROUP_ORDER
 
-- target:
-    kind: ServiceMonitor
-    name: app-monitor
-  patch: |-
-    - op: replace
-      path: /metadata/name
-      value: $SERVICE_SELECTOR-monitor
 
-    - op: replace
-      path: /spec/selector/matchLabels/app
-      value: $SERVICE_SELECTOR-prom
 
 - target:
     kind: Ingress
@@ -456,17 +450,7 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
       path: /spec/ports/0/port
       value: $INGRESS_GROUP_ORDER
 
-- target:
-    kind: ServiceMonitor
-    name: app-monitor
-  patch: |-
-    - op: replace
-      path: /metadata/name
-      value: $SERVICE_SELECTOR-monitor
 
-    - op: replace
-      path: /spec/selector/matchLabels/app
-      value: $SERVICE_SELECTOR-prom
 
 - target:
     kind: Ingress

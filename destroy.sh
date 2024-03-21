@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cluster=$1
 
 cd terraform
-./destroy.sh
+./destroy.sh $cluster

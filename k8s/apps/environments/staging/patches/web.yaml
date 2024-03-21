@@ -1,13 +1,4 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: staging
-resources:
-- ../../base
-- karpenter-provisioner.yaml
-
-
-
-patches:
+    
 - target:
     kind: Deployment
     name: apps-deployment
@@ -102,13 +93,9 @@ patches:
       path: /spec/rules/0/host
       value: staging.calebs.xyz
 
-    - op: add
-      path: /spec/rules/0/http/paths/0
-      value:
-        backend:
-          service:
-            name=staging-web 
-              
+    - op: replace
+      path: /spec/rules/0/http/paths/0/backend/service/name
+      value: staging-web
 
     - op: replace
       path: /metadata/annotations
@@ -117,10 +104,8 @@ patches:
     - op: add
       path: /spec/rules/0/http/paths/0/backend/service
       value: 
-        backend:
-          service:
-            port: 
-              number=80
+        port 
+          number=80
 
 - target:
     kind: ExternalSecret
@@ -137,17 +122,3 @@ patches:
     - op: replace
       path: /spec/provider/aws/region
       value: us-west-2
-
-
-
-
-
-
-
-
-
-
-
-
-
-

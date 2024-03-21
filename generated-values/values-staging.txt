@@ -2,11 +2,11 @@ TF_VAR_domain_name="calebs.xyz"
 TF_VAR_secret_creds="creds"
 TF_VAR_enable_git_ssh="false"
 TF_VAR_slack_channel="alerts"
-TF_VAR_region="us-east-1"
+TF_VAR_region="us-west-2"
 TF_VAR_git_repo="argocd-terraform"
 TF_VAR_db_engine="postgres"
 TF_VAR_git_owner="ChichiCaleb"
-TF_VAR_staging_image_list=horizonclient/calkube:v3.7.15
+TF_VAR_staging_image_list=horizonclient/calkube:v3.7.16
 TF_VAR_git_organization="https://github.com/ChichiCaleb"
 addons=" enable_argocd=true enable_argo_rollouts=true enable_argocd_image_updater=true enable_aws_ebs_csi_resources=true enable_external_secrets=true enable_aws_load_balancer_controller=true enable_karpenter=true enable_external_dns=true enable_grafana=true enable_loki_stack=true enable_cluster_proportional_autoscaler=true enable_kube_prometheus_stack=true enable_kyverno=true enable_kubecost=true"
 ------------------------------------ 

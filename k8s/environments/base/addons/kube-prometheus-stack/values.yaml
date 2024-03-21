@@ -1,6 +1,6 @@
 prometheus:
   additionalServiceMonitors:
-    - name: app-monitor
+    - name: "{{metadata.annotations.service_monitor_name}}"
       additionalLabels:
         release: prometheus
         prometheus: main
@@ -9,10 +9,10 @@ prometheus:
         port: http-metrics
       namespaceSelector:
         matchNames:
-        - staging
+        - "{{metadata.annotations.service_monitor_namespace}}"
       selector:
         matchLabels:
-          app: app-monitoring
+          app: "{{metadata.annotations.service_monitor_label_selector}}"
 
 # Adding an ingress resource for Prometheus GUI
   ingress:
@@ -84,5 +84,5 @@ alertmanager:
       slack_configs:
       - channel: "#alerts"
         send_resolved: true
-        api_url: "https://hooks.slack.com/services/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"
+        api_url: "{{metadata.annotations.slack_api_webhook}}"
         text: "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"

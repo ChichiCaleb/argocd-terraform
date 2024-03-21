@@ -49,6 +49,7 @@ locals {
       staging_aws_certificate_arn      = terraform.workspace == "staging" ? aws_acm_certificate_validation.this.certificate_arn : null
       prod_aws_certificate_arn         = terraform.workspace == "prod" ? aws_acm_certificate_validation.this.certificate_arn : null
       slack_token                 = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).SLACK_TOKEN
+      slack_api_webhook            = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).SLACK_API_WEBHOOK
       workload_sm_secret          = var.secret_creds
       staging_db_instance_address  = terraform.workspace == "staging" ? module.db.db_instance_address : null
       prod_db_instance_address     = terraform.workspace == "prod" ? module.db.db_instance_address : null
@@ -60,6 +61,9 @@ locals {
       kube_cost_host              ="kubecost-${terraform.workspace}.${local.domain_name}"
       grafana_host                ="grafana-${terraform.workspace}.${local.domain_name}"
       prometheus_host             ="prometheus-${terraform.workspace}.${local.domain_name}"
+      service_monitor_name        =var.service_monitor_name
+      service_monitor_namespace   =var.service_monitor_namespace
+      service_monitor_label_selector  =var.service_monitor_label_selector
       
      
     },
@@ -124,8 +128,43 @@ module "gitops_bridge_bootstrap" {
   depends_on = [module.eks_blueprints_addons, kubernetes_namespace.argocd, kubernetes_secret.git_secrets]
 }
 
+################################################################################
+# GitOps Bridge: Bootstrap for Addons
+################################################################################
+resource "argocd_application" "bootstrap_addons" {
 
-
+  metadata {
+    name      = "bootstrap-addons"
+    namespace = "argocd"
+    labels = {
+      cluster = "in-cluster"
+    }
+  }
+  cascade = true
+  wait    = true
+  spec {
+    project = "default"
+    destination {
+      name      = "in-cluster"
+      namespace = "argocd"
+    }
+    source {
+      repo_url        = "${var.gitops_addons_org}/${var.gitops_addons_repo}"
+      path            = "${var.gitops_addons_basepath}${var.gitops_addons_path}"
+      target_revision = var.gitops_addons_revision
+      directory {
+        recurse = true
+        }
+    }
+    sync_policy {
+      automated {
+        prune     = true
+        self_heal = true
+      }
+    }
+  }
+  depends_on = [module.gitops_bridge_bootstrap]
+}
 
 ################################################################################
 # Route 53

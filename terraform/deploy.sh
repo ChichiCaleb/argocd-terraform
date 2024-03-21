@@ -36,7 +36,6 @@ if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   source "$TMPFILE"
 
 
-kubectl apply -f  ../k8s/bootstrap/control-plane/addons/aws
 kubectl apply -f  ../k8s/bootstrap/workloads/apps-$env
 
 fi

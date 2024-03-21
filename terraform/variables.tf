@@ -51,7 +51,7 @@ variable "vpc_cidr" {
 variable "region" {
   description = "AWS region"
   type        = string
-  default     = "us-east-1"
+  default     = "us-west-2"
 }
 variable "kubernetes_version" {
   description = "Kubernetes version"
@@ -154,5 +154,23 @@ variable "gitops_workload_path" {
   type        = string
   default     = "apps"
 }
+variable "service_monitor_name" {
+  description = "Git repository path for workload"
+  type        = string
+  default     = "staging-web-monitor"
+}
+
+variable "service_monitor_namespace" {
+  description = "Git repository path for workload"
+  type        = string
+  default     = "staging"
+}
+
+variable "service_monitor_label_selector" {
+  description = "Git repository path for workload"
+  type        = string
+  default     = "staging-web-prom"
+}
+
 
 
