@@ -1,3 +1,4 @@
+---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -13,17 +14,12 @@ spec:
     validate:
       message: "Port numbers must be unique across services within the namespace."
       pattern:
-        spec:
-          ports:
-          - key: "port"
-            value: "{{request.object.spec.ports[*].port}}"
-      anyOf:
-      - pattern:
-          - not:
-              # Checks if the current service has any duplicate port numbers with other services in the namespace
-              - eq:
-                  - "{{request.namespace}}"
-                  - "{{request.object.metadata.namespace}}"
-              - eq:
-                  - "{{request.object.spec.ports[*].port}}"
-                  - "{{services.objects.metadata.namespace[request.namespace].spec.ports[*].port | unique }}"
+        spec.ports[*].port:
+          anyOf:
+          - match:
+              eq:
+                "{{request.object.metadata.namespace}}": "{{request.namespace}}"
+          - pattern:
+              not:
+                eq:
+                  "{{request.object.spec.ports[*].port}}": "{{services.objects.metadata.namespace[request.namespace].spec.ports[*].port | unique }}"

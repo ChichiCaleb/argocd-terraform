@@ -46,10 +46,12 @@ locals {
       
       argocd_host                 = local.argocd_host
       external_dns_domain_filters = "[${local.domain_name}]"
-      aws_certificate_arn         = aws_acm_certificate_validation.this.certificate_arn
+      staging_aws_certificate_arn      = terraform.workspace == "staging" ? aws_acm_certificate_validation.this.certificate_arn : null
+      prod_aws_certificate_arn         = terraform.workspace == "prod" ? aws_acm_certificate_validation.this.certificate_arn : null
       slack_token                 = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string).SLACK_TOKEN
       workload_sm_secret          = var.secret_creds
-      db_instance_address         = module.db.db_instance_address
+      staging_db_instance_address  = terraform.workspace == "staging" ? module.db.db_instance_address : null
+      prod_db_instance_address     = terraform.workspace == "prod" ? module.db.db_instance_address : null
       slack_channel               = var.slack_channel
       preview_image_list          =var.preview_image_list
       staging_image_list          =var.staging_image_list

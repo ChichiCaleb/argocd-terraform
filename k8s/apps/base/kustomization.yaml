@@ -11,7 +11,7 @@ resources:
 - externalName-service.yaml
 - prom-service.yaml
 - service-monitor.yaml
-- kyverno-policies
+- ./kyverno-policies
 
 
 configMapGenerator:

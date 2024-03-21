@@ -366,11 +366,15 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
   patch: |-
     - op: replace
       path: /metadata/name
-      value: $SERVICE_SELECTOR
+      value: $SERVICE_SELECTOR-prom
 
     - op: replace
       path: /spec/selector/apps
       value: $SERVICE_SELECTOR
+
+    - op: replace
+      path: /spec/ports/0/port
+      value: $INGRESS_GROUP_ORDER
 
 - target:
     kind: ServiceMonitor
@@ -378,11 +382,11 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
   patch: |-
     - op: replace
       path: /metadata/name
-      value: $SERVICE_SELECTOR
+      value: $SERVICE_SELECTOR-monitor
 
     - op: replace
       path: /spec/selector/matchLabels/app
-      value: $SERVICE_SELECTOR
+      value: $SERVICE_SELECTOR-prom
 
 - target:
     kind: Ingress
@@ -404,14 +408,15 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
       path: /spec/rules/0/http/paths/0/backend/service/name
       value: $SERVICE_SELECTOR
 
-    
     - op: replace
-      path: /metadata/annotations/[alb.ingress.kubernetes.io/group.order]
-      value: $INGRESS_GROUP_ORDER
+      path: /metadata/annotations
+      value: alb.ingress.kubernetes.io/group.order=$INGRESS_GROUP_ORDER
 
     - op: add
-      path: /spec/rules/0/http/paths/0/backend/service/port
-      value: number=$PORT
+      path: /spec/rules/0/http/paths/0/backend/service
+      value: 
+        port 
+          number=$PORT
 
 - target:
     kind: ExternalSecret
@@ -441,11 +446,15 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
   patch: |-
     - op: replace
       path: /metadata/name
-      value: $SERVICE_SELECTOR
+      value: $SERVICE_SELECTOR-prom
 
     - op: replace
       path: /spec/selector/apps
       value: $SERVICE_SELECTOR
+
+    - op: replace
+      path: /spec/ports/0/port
+      value: $INGRESS_GROUP_ORDER
 
 - target:
     kind: ServiceMonitor
@@ -453,11 +462,11 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
   patch: |-
     - op: replace
       path: /metadata/name
-      value: $SERVICE_SELECTOR
+      value: $SERVICE_SELECTOR-monitor
 
     - op: replace
       path: /spec/selector/matchLabels/app
-      value: $SERVICE_SELECTOR
+      value: $SERVICE_SELECTOR-prom
 
 - target:
     kind: Ingress
@@ -476,8 +485,8 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
       value: $BASE_DOMAIN
 
     - op: replace
-      path: /metadata/annotations/[alb.ingress.kubernetes.io/group.order]
-      value: $INGRESS_GROUP_ORDER
+      path: /metadata/annotations
+      value: alb.ingress.kubernetes.io/group.order=$INGRESS_GROUP_ORDER
 
     - op: replace
       path: /spec/rules/0/http/paths/0/path
@@ -493,7 +502,10 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
 
     - op: add
       path: /spec/rules/0/http/paths/0/backend/service/port
-      value: name=use-annotation
+      value: 
+        port 
+          name=use-annotation
+      
 
 - target:
     kind: Rollout

@@ -24,9 +24,11 @@ terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   source "$TMPFILE"
 
-kubectl patch ns argocd \
-  --type json \
-  --patch='[ { "op": "remove", "path": "/spec/finalizers" } ]' 
+killall kubectl
+kubectl proxy &
+kubectl get ns argocd -o json | \
+  jq '.spec.finalizers=[]' | \
+  curl -X PUT http://localhost:8001/api/v1/namespaces/argocd/finalize -H "Content-Type: application/json" --data @-
 
  if [ "$cluster" = "staging" ]; then
  kubectl patch -n argocd applicationset/apps-staging \

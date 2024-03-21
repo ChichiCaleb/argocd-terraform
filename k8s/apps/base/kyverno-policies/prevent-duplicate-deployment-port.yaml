@@ -1,3 +1,4 @@
+---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -13,19 +14,14 @@ spec:
     validate:
       message: "Port numbers must be unique across deployments within the namespace."
       pattern:
-        spec:
-          template:
-            spec:
-              containers:
-              - ports:
-                - containerPort: "{{request.object.spec.template.spec.containers[*].ports[*].containerPort}}"
-      anyOf:
-      - pattern:
-          - not:
-              # Checks if the current deployment has any duplicate port numbers with other deployments in the namespace
-              - eq:
-                  - "{{request.namespace}}"
-                  - "{{request.object.metadata.namespace}}"
-              - eq:
-                  - "{{request.object.spec.template.spec.containers[*].ports[*].containerPort}}"
-                  - "{{deployments.objects.metadata.namespace[request.namespace].spec.template.spec.containers[*].ports[*].containerPort | unique }}"
+        spec.template.spec.containers[*].ports[*].containerPort:
+          anyOf:
+          - match:
+              eq:
+                "{{request.object.metadata.namespace}}": "{{request.namespace}}"
+                
+          - pattern:
+              not:
+                eq:
+                  "{{request.object.spec.template.spec.containers[*].ports[*].containerPort}}": "{{deployments.objects.metadata.namespace[request.namespace].spec.template.spec.containers[*].ports[*].containerPort | unique }}"
+                

@@ -44,8 +44,8 @@ spec:
                 name: apps-ingress 
               patch: |-
                 - op: replace
-                  path: /metadata/annotations/[alb.ingress.kubernetes.io/certificate-arn]
-                  value: {{metadata.annotations.staging_aws_certificate_arn}} 
+                  path: /metadata/annotations
+                  value: alb.ingress.kubernetes.io/certificate-arn={{metadata.annotations.prod_aws_certificate_arn}} 
 
             - target:
                 kind: Service
@@ -53,7 +53,7 @@ spec:
               patch: |-
                 - op: replace
                   path: /spec/externalName
-                  value: {{metadata.annotations.staging_db_instance_address}
+                  value: {{metadata.annotations.prod_db_instance_address}
 
       
 
