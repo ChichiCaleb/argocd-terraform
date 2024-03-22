@@ -35,12 +35,8 @@ terraform -chdir=$SCRIPTDIR output -raw configure_kubectl > "$TMPFILE"
 if [[ ! $(cat $TMPFILE) == *"No outputs found"* ]]; then
   source "$TMPFILE"
 
-"${env}_aws_certificate_arn"=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type=cluster -o json | jq -r '.items[0].metadata.annotations.'"${env}"'_aws_certificate_arn')
-"${env}_db_instance_address"=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type=cluster -o json | jq -r '.items[0].metadata.annotations.'"${env}"'_db_instance_address')
-
-
-echo "${env}_CERTIFICATE_ARN=$(eval echo \$${env}_aws_certificate_arn)" >> ../k8s/apps/base/environment-properties.env
-echo "${env}_DB_ADDRESS=$(eval echo \$${env}_db_instance_address)" >> ../k8s/apps/base/environment-properties.env
+echo "${env}_CERTIFICATE_ARN"=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type=cluster -o json | jq -r '.items[0].metadata.annotations.'"${env}"'_aws_certificate_arn') >> ../k8s/apps/base/environment-properties.env
+echo "${env}_DB_ADDRESS"=$(kubectl get secret -n argocd -l argocd.argoproj.io/secret-type=cluster -o json | jq -r '.items[0].metadata.annotations.'"${env}"'_db_instance_address') >> ../k8s/apps/base/environment-properties.env
 
 kubectl apply -f  ../k8s/bootstrap/workloads/apps-$env
 

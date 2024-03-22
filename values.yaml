@@ -47,7 +47,7 @@ addons:
   enable_kube_prometheus_stack:  true        
   enable_kyverno:   true   
   enable_kubecost:  true 
-
+# your app config and environment variables
 config:
   NEXT_PUBLIC_WEBAPP_URL: staging.calebs.xyz
   NEXTAUTH_URL: staging.calebs.xyz/api/auth
