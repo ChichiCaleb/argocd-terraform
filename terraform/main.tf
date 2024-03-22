@@ -156,6 +156,7 @@ resource "argocd_application" "bootstrap_addons" {
         recurse = true
         }
     }
+
     sync_policy {
       automated {
         prune     = true
