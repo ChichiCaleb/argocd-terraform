@@ -49,6 +49,8 @@ spec:
             backend:
               service:
                 name: apps-service
+                port: 
+                  number: 80
                 
    
 
