@@ -83,9 +83,9 @@ spec:
                     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
                     alb.ingress.kubernetes.io/listen-ports: "[{\"HTTPS\":443}]"
                     alb.ingress.kubernetes.io/tags: "Environment=hub,GitOps=true"
-                    alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
-                    alb.ingress.kubernetes.io/group.name: apps
-                    alb.ingress.kubernetes.io/group.order: '1'
+                    # alb.ingress.kubernetes.io/load-balancer-name: ingress-cross-namespace
+                    # alb.ingress.kubernetes.io/group.name: apps
+                    # alb.ingress.kubernetes.io/group.order: '1'
                   ingressClassName: "alb"
                   hostname: {{.metadata.annotations.argocd_host}} 
                   extraTls:
