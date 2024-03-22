@@ -10,6 +10,7 @@ resources:
 - service.yaml
 - externalName-service.yaml
 - prom-service.yaml
+- service-monitor.yaml
 - ./kyverno-policies
 
 
@@ -18,3 +19,59 @@ configMapGenerator:
   envs:
   - environment-properties.env
   name: environment-variables
+
+configurations:
+- env-var-transformer.yaml
+replacements:
+- source:
+    fieldPath: data.staging_CERTIFICATE_ARN
+    kind: ConfigMap
+    name: environment-variables
+    version: v1
+  targets:
+  - fieldPaths:
+    - metadata.annotations.[alb.ingress.kubernetes.io/certificate-arn]
+    select:
+      group: networking.k8s.io
+      kind: Ingress
+      name: apps-ingress
+      version: v1
+- source:
+    fieldPath: data.prod_CERTIFICATE_ARN
+    kind: ConfigMap
+    name: environment-variables
+    version: v1
+  targets:
+  - fieldPaths:
+    - metadata.annotations.[alb.ingress.kubernetes.io/certificate-arn]
+    select:
+      group: networking.k8s.io
+      kind: Ingress
+      name: apps-ingress
+      version: v1
+- source:
+    fieldPath: data.staging_DB_ADDRESS
+    kind: ConfigMap
+    name: environment-variables
+    version: v1
+  targets:
+  - fieldPaths:
+    - spec.externalName
+    select:
+      group: v1
+      kind: Service
+      name: postgres
+      version: v1
+- source:
+    fieldPath: data.prod_DB_ADDRESS
+    kind: ConfigMap
+    name: environment-variables
+    version: v1
+  targets:
+  - fieldPaths:
+    - spec.externalName
+    select:
+      group: v1
+      kind: Service
+      name: postgres
+      version: v1

@@ -9,8 +9,6 @@ resources:
 - enable-kubecost-continuous-rightsizing.yaml
 - forbid-cpu-limits.yaml
 - ingress-host-match-tls.yaml
-- prevent-duplicate-deployment-port.yaml
-- prevent-duplicate-service-port.yaml
 - unique-ingress-host-and-path.yaml
 
 

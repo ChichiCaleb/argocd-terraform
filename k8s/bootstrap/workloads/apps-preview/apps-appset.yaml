@@ -57,9 +57,7 @@ spec:
               kind: Ingress
               name: apps-ingress 
             patch: |-
-              - op: replace
-                path: /metadata/annotations
-                value: alb.ingress.kubernetes.io/certificate-arn={{metadata.annotations.staging_aws_certificate_arn}} 
+             
 
               - op: replace
                 path: /spec/tls/0/hosts/0
@@ -70,12 +68,5 @@ spec:
                 value: "preview-{{ branch }}-{{ number }}.{{metadata.annotations.domain_name}}"
           
 
-          - target:
-              kind: Service
-              name: postgres
-            patch: |-
-              - op: replace
-                path: /spec/externalName
-                value: {{metadata.annotations.staging_db_instance_address}
        
       

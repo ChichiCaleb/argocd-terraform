@@ -75,6 +75,17 @@
       path: /spec/ports/0/port
       value: 9989
 
+- target:
+    kind: ServiceMonitor
+    name: app-monitor
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: staging-web-monitor
+
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: staging-web-prom
 
 
 - target:
@@ -104,7 +115,7 @@
     - op: add
       path: /spec/rules/0/http/paths/0/backend/service
       value: 
-        port 
+        port: 
           number=80
 
 - target:

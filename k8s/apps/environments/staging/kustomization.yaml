@@ -84,6 +84,17 @@ patches:
       path: /spec/ports/0/port
       value: 9989
 
+- target:
+    kind: ServiceMonitor
+    name: app-monitor
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: staging-web-monitor
+
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: staging-web-prom
 
 
 - target:
@@ -102,25 +113,19 @@ patches:
       path: /spec/rules/0/host
       value: staging.calebs.xyz
 
-    - op: add
-      path: /spec/rules/0/http/paths/0
-      value:
-        backend:
-          service:
-            name=staging-web 
-              
+    - op: replace
+      path: /spec/rules/0/http/paths/0/backend/service/name
+      value: staging-web
 
     - op: replace
       path: /metadata/annotations
       value: alb.ingress.kubernetes.io/group.order=9989
 
     - op: add
-      path: /spec/rules/0/http/paths/0
+      path: /spec/rules/0/http/paths/0/backend/service
       value: 
-        backend:
-          service:
-            port: 
-              number=80
+        port: 
+          number=80
 
 - target:
     kind: ExternalSecret
@@ -137,6 +142,7 @@ patches:
     - op: replace
       path: /spec/provider/aws/region
       value: us-west-2
+
 
 
 

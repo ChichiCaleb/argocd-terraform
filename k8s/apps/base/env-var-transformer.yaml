@@ -1,0 +1,8 @@
+varReference:
+  - kind: Ingress
+    path: metadata/annotations
+  - kind: Service
+    path: spec
+ 
+
+

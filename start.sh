@@ -380,6 +380,17 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
       path: /spec/ports/0/port
       value: $INGRESS_GROUP_ORDER
 
+- target:
+    kind: ServiceMonitor
+    name: app-monitor
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR-monitor
+
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: $SERVICE_SELECTOR-prom
 
 
 - target:
@@ -409,7 +420,7 @@ if [ "$ENVIRONMENT" = "staging" ] || [ "$ENVIRONMENT" = "preview" ]; then
     - op: add
       path: /spec/rules/0/http/paths/0/backend/service
       value: 
-        port 
+        port: 
           number=$PORT
 
 - target:
@@ -450,6 +461,17 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
       path: /spec/ports/0/port
       value: $INGRESS_GROUP_ORDER
 
+- target:
+    kind: ServiceMonitor
+    name: app-monitor
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: $SERVICE_SELECTOR-monitor
+
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: $SERVICE_SELECTOR-prom
 
 
 - target:
@@ -485,9 +507,9 @@ cat <<EOF >k8s/apps/environments/$ENVIRONMENT/patches/$SERVICE.yaml
       value: alb-rollout-root
 
     - op: add
-      path: /spec/rules/0/http/paths/0/backend/service/port
+      path: /spec/rules/0/http/paths/0/backend/service
       value: 
-        port 
+        port: 
           name=use-annotation
       
 

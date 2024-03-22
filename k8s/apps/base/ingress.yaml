@@ -1,3 +1,4 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -30,8 +31,8 @@ metadata:
     alb.ingress.kubernetes.io/target-type :  instance
 
     # Ingress Groups
-    alb.ingress.kubernetes.io/group.name: apps
-    alb.ingress.kubernetes.io/group.order: '9999'
+    alb.ingress.kubernetes.io/group.name: apps.web
+    alb.ingress.kubernetes.io/group.order: '20'
 spec:
   ingressClassName: alb
 
@@ -45,12 +46,11 @@ spec:
         paths:
           - path: /
             pathType: Prefix
-            # backend:
-            #   service:
-            #     name: apps-service
+            backend:
+              service:
+                name: apps-service
                 
-
-
+   
 
                 
                  
