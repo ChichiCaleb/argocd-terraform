@@ -1,18 +1,18 @@
 prometheus:
-  # additionalServiceMonitors:
-  #   - name: "{{metadata.annotations.service_monitor_name}}"
-  #     additionalLabels:
-  #       release: prometheus
-  #       prometheus: main
-  #     endpoints:
-  #     - path: /metrics
-  #       port: http-metrics
-  #     namespaceSelector:
-  #       matchNames:
-  #       - "{{metadata.annotations.service_monitor_namespace}}"
-  #     selector:
-  #       matchLabels:
-  #         app: "{{metadata.annotations.service_monitor_label_selector}}"
+  additionalServiceMonitors:
+    - name: "{{metadata.annotations.service_monitor_name}}"
+      additionalLabels:
+        release: prometheus
+        prometheus: main
+      endpoints:
+      - path: /metrics
+        port: http-metrics
+      namespaceSelector:
+        matchNames:
+        - "{{metadata.annotations.service_monitor_namespace}}"
+      selector:
+        matchLabels:
+          app: "{{metadata.annotations.service_monitor_label_selector}}"
 
 # Adding an ingress resource for Prometheus GUI
   ingress:

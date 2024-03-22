@@ -84,17 +84,6 @@ patches:
       path: /spec/ports/0/port
       value: 9989
 
-- target:
-    kind: ServiceMonitor
-    name: app-monitor
-  patch: |-
-    - op: replace
-      path: /metadata/name
-      value: staging-web-monitor
-
-    - op: replace
-      path: /spec/selector/matchLabels/app
-      value: staging-web-prom
 
 
 - target:

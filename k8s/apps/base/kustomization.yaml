@@ -10,7 +10,6 @@ resources:
 - service.yaml
 - externalName-service.yaml
 - prom-service.yaml
-- service-monitor.yaml
 - ./kyverno-policies
 
 
@@ -58,7 +57,7 @@ replacements:
   - fieldPaths:
     - spec.externalName
     select:
-      group: v1
+      # group: v1
       kind: Service
       name: postgres
       version: v1
